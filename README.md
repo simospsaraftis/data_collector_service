@@ -6,9 +6,7 @@
 
 ## Τεχνολογίες που θα χρησιμοποιηθούν
 
-- MinIO
-- IPFS
-- Docker
-- MongoDB
 - Fluentd
+- Ansible
+- MongoDB
 
