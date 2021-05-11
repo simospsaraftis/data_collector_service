@@ -1,0 +1,45 @@
+---
+- hosts: service
+  remote_user: docker
+  gather_facts: no
+  vars:
+    user: "docker"
+ 
+  tasks:
+
+# --------------------------------------------------------------------------------------
+# ---------------------  create test dir
+# --------------------------------------------------------------------------------------
+
+     # ------------------------
+     # test dir
+     # -------------------------
+    - name: make dir for test
+      become: true
+      file:
+        path: "/var/log-in/test"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0755'
+
+# --------------------------------------------------------------------------------------
+# ---------------------  kill and save ps tp tmp
+# --------------------------------------------------------------------------------------
+
+    - name: find fluentd 
+      #shell:  df -h >> /var/log-in/test/test
+      shell:  df -h
+      #shell: "ps efw -opid,cmd -Cfluentd | pgrep -o fluentd"
+      register: fluentddate
+     
+    - name: ls  fluentddate
+      debug: var=fluentddate.stdout_lines
+
+    - name: write to  /var/log-in/test/test2
+      shell:  "echo {{ item }} >> /var/log-in/test/test2"
+      with_items: "{{ fluentddate.stdout_lines }}"
+
+
+ 
+

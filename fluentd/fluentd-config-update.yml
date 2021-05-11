@@ -1,0 +1,118 @@
+---
+- hosts: service
+  remote_user: docker
+  gather_facts: no
+  vars:
+    user: "docker"
+ 
+  tasks:
+
+# --------------------------------------------------------------------------------------
+# ---------------------  copy conf to fluentd
+# --------------------------------------------------------------------------------------
+
+     # ------------------------
+     # cp fluentd.conf
+     # -------------------------
+    - name: cp fluentd.conf
+      become: true
+      copy:
+        src: "./files/fluent-config-update.conf"
+        dest: /fluentd/etc/fluent.conf
+        owner: docker
+        group: docker
+        mode: 0755
+
+# --------------------------------------------------------------------------------------
+# ---------------------  kill and save ps tp tmp
+# --------------------------------------------------------------------------------------
+
+     # ------------------------
+     # start fluentd
+     # -------------------------
+    - name: find fluentd 
+      shell: ps efw -opid -Cfluentd |  grep -v grep | grep -E '[0-9]'
+      #shell: "ps efw -opid,cmd -Cfluentd | pgrep -o fluentd"
+      register: fluentdps
+#      when: fluentdps is defined
+
+#    - fail: msg="this play requires fluentdps"
+      #when: fluentdps is not defined
+
+     # ------------------------
+     # start fluentd
+     #     # -------------------------
+    - name: kill -9 fluentd
+      become: true
+      ignore_errors: yes
+      shell: "kill -9 {{ item }}" 
+      with_items: "{{ fluentdps.stdout_lines }}"
+      when: fluentdps.stdout_lines is defined
+
+#    - fail: msg="this play requires fluentdps"
+#      when: fluentdps is not defined
+     
+    - name: ls  fluentdps
+      debug: var=fluentdps.stdout
+
+      #     # ------------------------
+      #     # save variable > /tmp
+      #     # -------------------------
+      #    - name: echo kill > tmp
+      #      shell: "echo {{ fluentdps.stdout }} > /tmp/123"
+      #      when: not fluentdps
+      #
+
+# --------------------------------------------------------------------------------------
+# ---------------------  start and save ps tp tmp
+# --------------------------------------------------------------------------------------
+
+     # ------------------------
+     # start fluentd
+     # -------------------------
+    - name: start fluentd background
+      shell: nohup /home/docker/.gem/ruby/2.5.0/bin/fluentd -c /fluentd/etc/fluent.conf -vv </dev/null >/dev/null 2>&1 &
+
+     # ------------------------
+     # start fluentd
+     # -------------------------
+    - name: find1 fluentd 
+      shell: ps efw -opid,cmd -Cfluentd | pgrep -o fluentd
+      register: fluentdps1
+
+    - name: ls  fluentdps1
+      debug: var=fluentdps1.stdout
+
+     # ------------------------
+     # save variable > /tmp1
+     # -------------------------
+    - name: echo > tmp1
+      shell: "echo {{ fluentdps1.stdout }} > /tmp/12345"
+
+     # ------------------------
+     # example4net tcpdump example
+     # -------------------------
+#    - name: google.com
+#      become: yes
+#      become_user: "{{ user }}"
+#      command:  curl http://www.google.com
+#      ignore_errors: yes
+#      register: configwww
+#
+#    - name: ls  configwww
+#      debug: var=configwww.stdout_lines
+#
+#    - name: ls -al /var/lab/playground/playground-readmongo/
+#      become: yes
+#      become_user: "{{ user }}"
+#      #command:  ls -al /var/lab/playground/playground-readmongo
+#      command:  netstat -antlupe
+#      ignore_errors: yes
+#      register: config
+#
+#    - name: ls  config
+#      debug: var=config.stdout_lines
+#
+#    - name: Refresh connection
+#      meta: clear_host_errors
+#
