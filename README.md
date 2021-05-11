@@ -9,4 +9,6 @@
 - Fluentd
 - Ansible
 - MongoDB
+- Socket.IO
+- Node.js
 
