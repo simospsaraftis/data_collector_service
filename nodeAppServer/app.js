@@ -1,8 +1,10 @@
 var express = require('express');
 var http = require('http');
 
-var PORT = 8000;
+const { Server } = require('socket.io');
+const io = new Server(http);
 
+var PORT = 8080;
 
 
 var app = express();
@@ -17,6 +19,10 @@ app.post('/', function(req, res) {
     console.log(JSON.stringify(message))
     //console.log(req)
     res.send({message: message});
+});
+
+io.on("log", (socket) => {
+  console.log('log');
 });
 
 http.Server(app).listen(PORT, function() {
