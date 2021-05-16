@@ -1,13 +1,11 @@
 var express = require('express');
 var http = require('http');
-
+var app = express();
+var PORT = 8000;
 const { Server } = require('socket.io');
 const io = new Server(http);
 
-var PORT = 8080;
 
-
-var app = express();
 app.get('/', function(req, res) {
     var message = req.query["log"]
     console.log(JSON.stringify(message))
@@ -26,6 +24,5 @@ io.on("log", (socket) => {
 });
 
 http.Server(app).listen(PORT, function() {
-    console.log("HTTP server listening on port %s", PORT);
+		console.log("HTTP server listening on port %s", PORT);
 });
-
