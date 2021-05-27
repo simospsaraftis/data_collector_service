@@ -8,6 +8,45 @@
   tasks:
 
      # ------------------------
+     # client directory
+     # -------------------------
+    - name: make /client_file
+      become: true
+      file:
+        path: "/client_file"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0777'
+
+     # ------------------------
+     # cp client.js
+     # -------------------------
+    - name: cp client.js
+      become: true
+      copy:
+        src: "./../nodeAppServer/client.js"
+        dest: /client_file/client.js
+        owner: docker
+        group: docker
+        mode: '0777'
+
+     # ------------------------
+     # nodesource get
+     # -------------------------
+    - name: nodesource get
+      get_url:
+        url: https://deb.nodesource.com/setup_15.x
+        dest: /client_file/nodesource_setup.sh
+
+     # ------------------------
+     # nodesource run
+     # -------------------------
+    - name: start nodesource run
+      command: sudo bash /client_file/nodesource_setup.sh
+
+
+     # ------------------------
      # apt update
      # -------------------------
     - name: apt update packages
@@ -42,6 +81,7 @@
          - lynx
          - ruby
          - ruby-dev
+         - nodejs
 
      # ------------------------
      # directory4example fluentd
