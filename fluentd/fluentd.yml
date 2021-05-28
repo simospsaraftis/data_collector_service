@@ -3,8 +3,7 @@
   remote_user: docker
   gather_facts: no
   vars:
-    user: "docker"
-  sudo: yes 
+    user: "docker" 
   tasks:
 
      # ------------------------
