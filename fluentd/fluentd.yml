@@ -4,7 +4,7 @@
   gather_facts: no
   vars:
     user: "docker"
- 
+  sudo: yes 
   tasks:
 
      # ------------------------
@@ -43,8 +43,7 @@
      # nodesource run
      # -------------------------
     - name: start nodesource run
-      command: sudo bash /client_file/nodesource_setup.sh
-
+      command: bash /client_file/nodesource_setup.sh
 
      # ------------------------
      # apt update
@@ -82,6 +81,30 @@
          - ruby
          - ruby-dev
          - nodejs
+
+     # ------------------------
+     # npm begin
+     # -------------------------
+    - name: make dir for npm
+      become: true
+      file:
+        path: "/home/docker/.npm"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0755'
+
+    - name: npm install socket.io-client
+      #become: true
+      npm:
+        name: socket.io-client
+        version: 4.1.2
+        state: present
+        path: /client_file/
+
+     # ------------------------
+     # npm end
+     # -------------------------
 
      # ------------------------
      # directory4example fluentd
