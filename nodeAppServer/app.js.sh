@@ -5,4 +5,5 @@ curl -sL https://deb.nodesource.com/setup_15.x -o nodesource_setup.sh \
 && npm install socket.io \
 && npm install socket.io-client \
 && npm install mongodb \
-&& npm install express
+&& npm install express \
+&& npm install helmet
