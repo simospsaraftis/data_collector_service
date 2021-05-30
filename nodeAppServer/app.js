@@ -5,16 +5,18 @@ const io = require("socket.io")(http);
 const MongoClient = require('mongodb').MongoClient;
 */
 
+//var fs = require('fs');
 var express = require('express');
 var http = require('http');
 var app = express();
+const dotenv = require('dotenv');
 //const cors = require('cors');
 const helmet = require('helmet');
 var MongoClient = require('mongodb').MongoClient;
 
 /*
 var allowedOrigins = [ 
-      'http://localhost:8085'
+      "http://localhost:8085"
       ];
 */
 
@@ -24,7 +26,7 @@ origin: function(origin, callback){    // allow requests with no origin
       if(!origin) 
         return callback(null, true);    
         if(allowedOrigins.indexOf(origin) === -1){
-          var msg = 'The CORS policy for this site does not ';
+          var msg = 'Not allowed';
           return callback(new Error(msg), false);
          }
       return callback(null, true);
@@ -32,11 +34,13 @@ origin: function(origin, callback){    // allow requests with no origin
 }));
 */
 
+dotenv.config();
+
 app.use(helmet());
 
 app.use(express.json());
 
-var serverPort = 8080;
+var serverPort = 8085;
 var server = http.createServer(app);
 
 /*
@@ -51,7 +55,10 @@ const io = require("socket.io")(server, {
 
 const io = require("socket.io")(server);
 
-const URL = "mongodb://swarmlab:swarmlab@swarmlabmongo1:27017/";
+//const URL = "mongodb://swarmlab:swarmlab@swarmlabmongo1:27017/";
+
+var mongourl = "mongodb://"+process.env.DB_USERNAME+":"+process.env.DB_PASSWORD+"@swarmlabmongo1:27017/";
+
 
 server.listen(serverPort, () => {
 		console.log("HTTP server listening on port %s", serverPort);
@@ -67,7 +74,7 @@ io.on('connection', (socket) => {
 		});
 });
 
-MongoClient.connect(URL,{useUnifiedTopology:true},(err, client) => {
+MongoClient.connect(mongourl,{useNewUrlParser: true,useUnifiedTopology: true},(err, client) => {
 		if(err) 
 		{
 				console.log(err);
