@@ -53,7 +53,7 @@ const io = require("socket.io")(server, {
 const io = require("socket.io")(server);
 
 
-var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/config.json", "utf8"));
+var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/configurations/config.json", "utf8"));
 var mongourl = "mongodb://"+mongoserver.mongo_user+":"+mongoserver.mongo_pass+"@"+mongoserver.mongo_name+":"+mongoserver.mongo_port+"/";
 
 
