@@ -11,6 +11,11 @@ var http = require('http');
 var app = express();
 //const cors = require('cors');
 const helmet = require('helmet');
+app.use(helmet());
+app.use(express.json());
+var serverPort = "8085";
+var server = http.createServer(app);
+const io = require("socket.io")(server);
 var MongoClient = require('mongodb').MongoClient;
 
 /*
@@ -33,13 +38,6 @@ origin: function(origin, callback){    // allow requests with no origin
 }));
 */
 
-app.use(helmet());
-
-app.use(express.json());
-
-var serverPort = 8085;
-var server = http.createServer(app);
-
 /*
 const io = require("socket.io")(server, {
    cors: {
@@ -50,26 +48,37 @@ const io = require("socket.io")(server, {
 });
 */
 
-const io = require("socket.io")(server);
 
-
-var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/configurations/config.json", "utf8"));
-var mongourl = "mongodb://"+mongoserver.mongo_user+":"+mongoserver.mongo_pass+"@"+mongoserver.mongo_name+":"+mongoserver.mongo_port+"/";
-
+//------------Server Listen---------------//
 
 server.listen(serverPort, () => {
 		console.log("HTTP server listening on port %s", serverPort);
 });
+
+//----------------------------------------//
+
+
+//-----------Socket.IO-------------//
 
 io.on('connection', (socket) => {
 		console.log("Client connected");
 		socket.on('disconnect',() => {
 				console.log("Client disconnected");
 		});
-		socket.on('start', (value) => {
-				console.log("start"+ value);
-		});
 });
+
+
+const transmit = change => {
+		io.emit('change_msg',change);
+}
+
+//-------------------------------------------//
+
+
+//---------------CHangeStream---------------//
+
+var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/config.json", "utf8"));
+var mongourl = "mongodb://"+mongoserver.mongo_user+":"+mongoserver.mongo_pass+"@"+mongoserver.mongo_name+":"+mongoserver.mongo_port+"/";
 
 MongoClient.connect(mongourl,{useNewUrlParser: true,useUnifiedTopology: true},(err, client) => {
 		if(err) 
@@ -85,8 +94,10 @@ MongoClient.connect(mongourl,{useNewUrlParser: true,useUnifiedTopology: true},(e
 
 		  changeStream.on('change', (change) => {
       	console.log(change);
-				io.emit('change_msg',change);
+				transmit(change);
 		});
 		};
 });
 
+
+//---------------------------------------------//
