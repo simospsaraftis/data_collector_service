@@ -5,11 +5,10 @@ const io = require("socket.io")(http);
 const MongoClient = require('mongodb').MongoClient;
 */
 
-//var fs = require('fs');
+var fs = require('fs');
 var express = require('express');
 var http = require('http');
 var app = express();
-const dotenv = require('dotenv');
 //const cors = require('cors');
 const helmet = require('helmet');
 var MongoClient = require('mongodb').MongoClient;
@@ -34,8 +33,6 @@ origin: function(origin, callback){    // allow requests with no origin
 }));
 */
 
-dotenv.config();
-
 app.use(helmet());
 
 app.use(express.json());
@@ -55,9 +52,9 @@ const io = require("socket.io")(server, {
 
 const io = require("socket.io")(server);
 
-//const URL = "mongodb://swarmlab:swarmlab@swarmlabmongo1:27017/";
 
-var mongourl = "mongodb://"+process.env.DB_USERNAME+":"+process.env.DB_PASSWORD+"@swarmlabmongo1:27017/";
+var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/config.json", "utf8"));
+var mongourl = "mongodb://"+mongoserver.mongo_user+":"+mongoserver.mongo_pass+"@"+mongoserver.mongo_name+":"+mongoserver.mongo_port+"/";
 
 
 server.listen(serverPort, () => {
