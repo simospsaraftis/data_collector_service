@@ -1,8 +1,9 @@
-nodeAppServer/node_modules
-nodeAppServer/nodesource_setup.sh
-nodeAppServer/package-lock.json
-nodeAppServer/nodejs.retry
+app/node_modules
+app/nodesource_setup.sh
+app/package-lock.json
+app/nodejs.retry
+app/inventory.yml
+app/config.json
+
 fluentd/fluentd.retry
 fluentd/inventory.yml
-nodeAppServer/inventory.yml
-nodeAppServer/config.json
