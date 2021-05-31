@@ -77,7 +77,7 @@ const transmit = change => {
 
 //---------------CHangeStream---------------//
 
-var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/config.json", "utf8"));
+var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/test/config.json", "utf8"));
 var mongourl = "mongodb://"+mongoserver.mongo_user+":"+mongoserver.mongo_pass+"@"+mongoserver.mongo_name+":"+mongoserver.mongo_port+"/";
 
 MongoClient.connect(mongourl,{useNewUrlParser: true,useUnifiedTopology: true},(err, client) => {

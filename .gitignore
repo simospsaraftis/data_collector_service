@@ -3,3 +3,5 @@ nodeAppServer/nodesource_setup.sh
 nodeAppServer/package-lock.json
 nodeAppServer/nodejs.retry
 fluentd/fluentd.retry
+fluentd/inventory.yml
+nodeAppServer/inventory.yml
