@@ -7,5 +7,4 @@ curl -sL https://deb.nodesource.com/setup_15.x -o nodesource_setup.sh \
 && npm install mongodb \
 && npm install express \
 && npm install helmet \
-&& npm install fs \
-&& npm install dotenv
+&& npm install fs
