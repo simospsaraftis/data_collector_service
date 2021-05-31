@@ -5,3 +5,4 @@ nodeAppServer/nodejs.retry
 fluentd/fluentd.retry
 fluentd/inventory.yml
 nodeAppServer/inventory.yml
+nodeAppServer/config.json
