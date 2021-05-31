@@ -1,3 +1,4 @@
 nodeAppServer/node_modules
 nodeAppServer/nodesource_setup.sh
 nodeAppServer/package-lock.json
+nodeAppServer/nodejs.retry
