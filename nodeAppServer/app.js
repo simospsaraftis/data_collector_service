@@ -5,7 +5,7 @@ const io = require("socket.io")(http);
 const MongoClient = require('mongodb').MongoClient;
 */
 
-var fs = require('fs');
+//var fs = require('fs');
 var express = require('express');
 var http = require('http');
 var app = express();
@@ -16,6 +16,7 @@ app.use(express.json());
 var serverPort = "8085";
 var server = http.createServer(app);
 const io = require("socket.io")(server);
+require('dotenv').config();
 var MongoClient = require('mongodb').MongoClient;
 
 /*
@@ -77,8 +78,9 @@ const transmit = change => {
 
 //---------------CHangeStream---------------//
 
-var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/config.json", "utf8"));
-var mongourl = "mongodb://"+mongoserver.mongo_user+":"+mongoserver.mongo_pass+"@"+mongoserver.mongo_name+":"+mongoserver.mongo_port+"/";
+//var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/nodeAppServer/config.json", "utf8"));
+
+var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
 MongoClient.connect(mongourl,{useNewUrlParser: true,useUnifiedTopology: true},(err, client) => {
 		if(err) 
