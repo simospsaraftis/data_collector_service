@@ -46,6 +46,15 @@
       command: bash /client_file/nodesource_setup.sh
 
      # ------------------------
+     # nodesource remove
+     # -------------------------
+    - name: start nodesource remove
+      become: true
+      file: 
+        state: absent
+        path: /client_file/nodesource_setup.sh
+
+     # ------------------------
      # apt update
      # -------------------------
     - name: apt update packages
@@ -77,7 +86,7 @@
      # npm begin
      # -------------------------
     - name: make dir for npm
-      become: false
+      become: true
       file:
         path: "/home/docker/.npm"
         state: directory
@@ -86,7 +95,7 @@
         mode: '0755'
 
     - name: npm install socket.io-client
-      become: false
+      become: true
       npm:
         name: socket.io-client
         version: 4.1.2
