@@ -3,8 +3,8 @@
 sudo apt update -y
 sudo apt install -y ansible sshpass
 
-sudo chown $(whoami) /data_collector_service/app/inventory.yml
-sudo chmod +rwx /data_collector_service/app/inventory.yml
+sudo chown $(whoami) /data_collector_service/app
+sudo chmod +rwx /data_collector_service/app
 
 sudo mkdir -p /home/docker/.ansible
 sudo chown docker.docker -R /home/docker
@@ -23,6 +23,4 @@ echo "[service]" > /data_collector_service/app/inventory.yml
 
 
 ansible-playbook -u docker -i /data_collector_service/app/inventory.yml nodejs.yml  -f 5  --ask-pass --ask-become-pass
-# 1st make sudo without password
-# run with keys
-#ansible-playbook -u docker -i inventory.yml nodejs.yml  -f 5  --private-key=/home/docker/.ssh/id_rsa
+

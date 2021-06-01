@@ -7,6 +7,15 @@
   tasks:
 
      # ------------------------
+     # client directory remove
+     # -------------------------
+    - name: client directory remove
+      become: true
+      file:
+        state: absent
+        path: /client_file
+
+     # ------------------------
      # client directory
      # -------------------------
     - name: make /client_file
@@ -95,17 +104,11 @@
         mode: '0755'
 
     - name: npm install socket.io-client
-      become: true
       npm:
         name: socket.io-client
         version: 4.1.2
         state: present
         path: /client_file/
-        global: yes
-#      register: config
-
-#    - name: ls  config
-#      debug: var=config.stdout_lines
 
      # ------------------------
      # npm end

@@ -113,24 +113,6 @@
      # -------------------------
 
      # ------------------------
-     # add group
-     # -------------------------
-#    - name: add group fluent
-#      become: true
-#      group:
-#        name: fluent
-#        state: present
-#
-     # ------------------------
-     # add user
-     # -------------------------
-#    - name: add user gem 
-#      become: true
-#      user:
-#        name: fluent
-#        group: fluent
-
-     # ------------------------
      # mkdir directory4 fluent
      # -------------------------
     - name: make dir fluentd
@@ -157,7 +139,7 @@
     - name: cp fluentd.conf
       become: true
       copy:
-        src: "./files/fluent.conf"
+        src: "./conf/fluent.conf"
         dest: /fluentd/etc/fluent.conf
         owner: docker
         group: docker
@@ -168,32 +150,4 @@
      # -------------------------
     - name: start fluentd background
       shell: nohup /home/docker/.gem/ruby/2.5.0/bin/fluentd -c /fluentd/etc/fluent.conf -vv </dev/null >/dev/null 2>&1 &
-
-     # ------------------------
-     # example4net tcpdump example
-     # -------------------------
-#    - name: google.com
-#      become: yes
-#      become_user: "{{ user }}"
-#      command:  curl http://www.google.com
-#      ignore_errors: yes
-#      register: configwww
-#
-#    - name: ls  configwww
-#      debug: var=configwww.stdout_lines
-#
-#    - name: ls -al /var/lab/playground/playground-readmongo/
-#      become: yes
-#      become_user: "{{ user }}"
-#      #command:  ls -al /var/lab/playground/playground-readmongo
-#      command:  netstat -antlupe
-#      ignore_errors: yes
-#      register: config
-#
-#    - name: ls  config
-#      debug: var=config.stdout_lines
-#
-#    - name: Refresh connection
-#      meta: clear_host_errors
-#
  

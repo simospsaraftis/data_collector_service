@@ -23,6 +23,4 @@ echo $ip4 >> /data_collector_service/fluentd/inventory.yml
 
 
 ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --ask-pass --ask-become-pass
-# 1st make sudo without password
-# run with keys
-#ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --private-key=/home/docker/.ssh/id_rsa
+
