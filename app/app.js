@@ -9,7 +9,7 @@ const MongoClient = require('mongodb').MongoClient;
 var express = require('express');
 var http = require('http');
 var app = express();
-//const cors = require('cors');
+const cors = require('cors');
 const helmet = require('helmet');
 app.use(helmet());
 app.use(express.json());
@@ -19,11 +19,10 @@ const io = require("socket.io")(server);
 require('dotenv').config();
 var MongoClient = require('mongodb').MongoClient;
 
-/*
+
 var allowedOrigins = [ 
-      "http://localhost:8085"
+      "http://hybrid-linux_worker_*:8085"
       ];
-*/
 
 /*
 app.use(cors({
@@ -39,16 +38,13 @@ origin: function(origin, callback){    // allow requests with no origin
 }));
 */
 
-/*
+
 const io = require("socket.io")(server, {
    cors: {
          origin: allowedOrigins,
-         //origin: [ "http://localhost:8085" ],
          methods: ["GET", "POST"]
    }
 });
-*/
-
 
 //------------Server Listen---------------//
 
@@ -76,9 +72,7 @@ const transmit = change => {
 //-------------------------------------------//
 
 
-//---------------CHangeStream---------------//
-
-//var mongoserver = JSON.parse(fs.readFileSync("/data_collector_service/app/config.json", "utf8"));
+//---------------ChangeStream---------------//
 
 var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
@@ -100,6 +94,5 @@ MongoClient.connect(mongourl,{useNewUrlParser: true,useUnifiedTopology: true},(e
 		});
 		};
 });
-
 
 //---------------------------------------------//
