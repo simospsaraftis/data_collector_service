@@ -1,6 +1,6 @@
 const io = require("socket.io-client");
 
-const URL = "http://localhost:8000";
+const URL = "http://hybrid-linux_master_1:8085";
 
 const socket = io.connect(URL, {reconnect:true});
 
