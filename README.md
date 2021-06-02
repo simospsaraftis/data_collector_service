@@ -12,9 +12,9 @@
 
 ## Τεχνολογίες που χρησιμοποιήθηκαν
 
-- [Ansible](https://www.fluentd.org/)
-- Fluentd
-- MongoDB
-- Socket.IO
-- Node.js
+- [Ansible](https://www.ansible.com/)
+- [Fluentd](https://www.fluentd.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Socket.IO](https://socket.io/)
+- [Node.js](https://nodejs.org/en/)
 
