@@ -67,12 +67,15 @@ var connectWithRetry = function() {
 		  			const changeStream = taskCollection.watch();
 
 		  			changeStream.on('change', (change) => {
-      				console.log(change);
-							transmit(change);
-						});
-
-						changeStream.on('close', () => {
-							console.log("ChangeStream closed");
+								if (change.operationType === 'invalidate')
+								{
+      							console.log("ChangeStream closed");
+								}
+								else 
+								{
+									console.log(change);
+									transmit(change);
+								}
 						});
 				}
 				catch (err)
