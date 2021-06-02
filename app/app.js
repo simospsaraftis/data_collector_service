@@ -61,9 +61,9 @@ var connectWithRetry = function() {
 		return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
 	  		try
 				{
-		  			var db = client.db('app_swarmlab');
+		  			var db = client.db(process.env.MONGO_INITDB_DATABASE);
 						console.log("Connected to mongodb");
-		  			const taskCollection = db.collection('logs');
+		  			const taskCollection = db.collection(process.env.MONGO_INITDB_COLLECTION);
 		  			const changeStream = taskCollection.watch();
 
 		  			changeStream.on('change', (change) => {
