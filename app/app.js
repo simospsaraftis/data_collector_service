@@ -70,6 +70,10 @@ var connectWithRetry = function() {
       				console.log(change);
 							transmit(change);
 						});
+
+						changeStream.on('close', () => {
+							console.log("ChangeStream closed");
+						});
 				}
 				catch (err)
 				{
