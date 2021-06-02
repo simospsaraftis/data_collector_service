@@ -43,7 +43,7 @@
          - ruby-dev
 
      # ------------------------
-     # directory4example fluentd
+     # directory for fluentd
      # -------------------------
     - name: make /var/log-in
       become: true
@@ -113,7 +113,7 @@
      # -------------------------
 
      # ------------------------
-     # mkdir directory4 fluent
+     # mkdir directory for fluent
      # -------------------------
     - name: make dir fluentd
       become: true

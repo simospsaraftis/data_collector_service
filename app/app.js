@@ -1,50 +1,30 @@
-/*
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require("socket.io")(http);
-const MongoClient = require('mongodb').MongoClient;
-*/
-
-//var fs = require('fs');
 var express = require('express');
 var http = require('http');
 var app = express();
-const cors = require('cors');
+//const cors = require('cors');
 const helmet = require('helmet');
 app.use(helmet());
 app.use(express.json());
-var serverPort = "8085";
+var serverPort = "8089";
 var server = http.createServer(app);
 const io = require("socket.io")(server);
 require('dotenv').config();
 var MongoClient = require('mongodb').MongoClient;
 
-
+/*
 var allowedOrigins = [ 
       "http://hybrid-linux_worker_*:8085"
       ];
-
-/*
-app.use(cors({
-origin: function(origin, callback){    // allow requests with no origin 
-      if(!origin) 
-        return callback(null, true);    
-        if(allowedOrigins.indexOf(origin) === -1){
-          var msg = 'Not allowed';
-          return callback(new Error(msg), false);
-         }
-      return callback(null, true);
-    }
-}));
 */
 
-
+/*
 const io = require("socket.io")(server, {
    cors: {
          origin: allowedOrigins,
          methods: ["GET", "POST"]
    }
 });
+*/
 
 //------------Server Listen---------------//
 
@@ -76,23 +56,28 @@ const transmit = change => {
 
 var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
-MongoClient.connect(mongourl,{useNewUrlParser: true,useUnifiedTopology: true},(err, client) => {
-		if(err) 
-		{
-				console.log(err);
-		} 
-		else 
-		{
-			console.log("Connected to swarmlabmongo1");
-		  var db = client.db('app_swarmlab');
-		  const taskCollection = db.collection('logs');
-		  const changeStream = taskCollection.watch();
+var connectWithRetry = function() {
 
-		  changeStream.on('change', (change) => {
-      	console.log(change);
-				transmit(change);
+		return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
+	  		try
+				{
+		  			var db = client.db('app_swarmlab');
+						console.log("Connected to mongodb");
+		  			const taskCollection = db.collection('logs');
+		  			const changeStream = taskCollection.watch();
+
+		  			changeStream.on('change', (change) => {
+      				console.log(change);
+							transmit(change);
+						});
+				}
+				catch (err)
+				{
+						console.error("\n\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
+            setTimeout(connectWithRetry, 5000);
+				}
 		});
-		};
-});
+};
+connectWithRetry();
 
 //---------------------------------------------//
