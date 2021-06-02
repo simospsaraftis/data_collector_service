@@ -67,15 +67,22 @@ var connectWithRetry = function() {
 		  			const changeStream = taskCollection.watch();
 
 		  			changeStream.on('change', (change) => {
-								if (change.operationType === 'invalidate')
+							  if (change.operationType === 'insert') 
 								{
-      							console.log("ChangeStream closed");
+								  const content = {
+                      id: change.fullDocument._id,
+                      message: change.fullDocument.message,
+                      tailed_path: change.fullDocument.tailed_path,
+                      time: change.fullDocument.time
+                  }
+
+									console.log(content);
+									transmit(content);
 								}
-								else 
-								{
-									console.log(change);
-									transmit(change);
-								}
+								else if (change.operationType === 'invalidate')
+                {
+                    console.log("ChangeStream closed");
+                }
 						});
 				}
 				catch (err)
