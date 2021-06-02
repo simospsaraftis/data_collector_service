@@ -9,7 +9,7 @@ sudo chmod +rwx /data_collector_service/app
 sudo mkdir -p /home/docker/.ansible
 sudo chown docker.docker -R /home/docker
 
-sudo cp ../ansible.cfg /etc/ansible/ansible.cfg
+sudo cp ../ansible/ansible.cfg /etc/ansible/ansible.cfg
 
 ip4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
 ip6=$(/sbin/ip -o -6 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
