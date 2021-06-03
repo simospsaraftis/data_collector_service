@@ -57,3 +57,5 @@ ___
 ```
 docker container ls
 ```
+
+![Λίστα container](./images/picture2.png)
