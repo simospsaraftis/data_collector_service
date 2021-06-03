@@ -18,13 +18,13 @@ ___
 
 - [Ansible](https://www.ansible.com/)<br/>
 Λογισμικό για την εγκατάσταση των υπηρεσιών στους κόμβους του σμήνους.
-- [Fluentd](https://www.fluentd.org/)
+- [Fluentd](https://www.fluentd.org/)<br/>
 Λογισμικό για τη συλλογή των δεδομένων.
-- [MongoDB](https://www.mongodb.com/)
+- [MongoDB](https://www.mongodb.com/)<br/>
 Πρόγραμμα βάσης δεδομένων για την αποθήκευση των δεδομένων.
-- [Node.js](https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/en/)<br/>
 Πλατφόρμα ανάπτυξης λογισμικού σε γλώσσα προγραμματισμού JavaScript για τη συγγραφή του κώδικα για την επικοινωνία μεταξύ του εξυπηρετητή (master) και των πελατών (workers).
-- [Socket.IO](https://socket.io/)
+- [Socket.IO](https://socket.io/)<br/>
 Βιβλιοθήκη JavaScript για την επίτευξη αμφίδρομης επικοινωνίας μεταξύ του εξυπηρετητή (master) και των πελατών (workers) σε πραγματικό χρόνο.
 
 ### 1.3 Διάγραμμα αρχιτεκτονικής εικονικού εργαστηρίου
