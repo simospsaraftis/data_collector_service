@@ -59,7 +59,12 @@ var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.e
 var connectWithRetry = function() {
 
 		return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
-	  		try
+	  		if(err)
+				{
+						console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
+            setTimeout(connectWithRetry, 5000);
+				}
+				else
 				{
 		  			var db = client.db(process.env.MONGO_INITDB_DATABASE);
 						console.log("Connected to mongodb");
@@ -84,12 +89,7 @@ var connectWithRetry = function() {
                     console.log("ChangeStream closed");
                 }
 						});
-				}
-				catch (err)
-				{
-						console.error("\n\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-            setTimeout(connectWithRetry, 5000);
-				}
+				}				
 		});
 };
 connectWithRetry();
