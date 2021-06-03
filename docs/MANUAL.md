@@ -52,13 +52,8 @@ ___
 
 Να αναφέρουμε εδώ, ότι για να μπορέσει το εικονικό εργαστήριο να εκτελέσει όλες τις υπηρεσίες που θα παρέχει στους χρήστες, θα πρέπει να ορίσουμε το σμήνος να διαθέτει τουλάχιστον δύο instances, δηλαδή τουλάχιστον έναν master και έναν worker.
 
-Εκτελώντας την ακόλουθη εντολή, μπορούμε να δούμε τα δίκτυα που έχουν δημιουργηθεί στο [docker](https://www.docker.com/):
+Εκτελώντας την ακόλουθη εντολή, μπορούμε να δούμε τα containers που έχουν δημιουργηθεί στο [docker](https://www.docker.com/):
 
-----
-CONTAINER ID   IMAGE                                                 COMMAND                  CREATED             STATUS             PORTS                                                                          NAMES
-f6c5b9052443   localhost:5000/hybrid-linux                           "sec_bootstrap role=…"   About an hour ago   Up About an hour                                                                                  hybrid-linux_worker_2
-2c1ee3eceae8   localhost:5000/hybrid-linux                           "sec_bootstrap role=…"   About an hour ago   Up About an hour                                                                                  hybrid-linux_worker_1
-a6d4d619ccb6   localhost:5000/hybrid-linux                           "sec_bootstrap role=…"   About an hour ago   Up About an hour   0.0.0.0:34435->22/tcp, :::34435->22/tcp                                        hybrid-linux_master_1
-f7c394c37cad   registry                                              "/entrypoint.sh /etc…"   About an hour ago   Up About an hour   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp                                      hybrid-linux_registry_1
-11965e7ce095   hub.swarmlab.io:5480/playground-hybrid-agent:latest   "docker-entrypoint.s…"   35 hours ago        Up 14 hours        443/tcp, 3000/tcp, 3080/tcp, 8080/tcp, 0.0.0.0:3088->80/tcp, :::3088->80/tcp   swarmlab-hybrid-agent
-----
+```
+docker container ls
+```
