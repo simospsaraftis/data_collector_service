@@ -35,7 +35,11 @@ ___
 
 ## 2. Εγκατάσταση Εικονικού Εργαστηρίου
 
-Για την εγκατάσταση του εικονικού εργαστηρίου, θα αξιοποιηθεί το ήδη υπάρχον εικονικό εργαστήριο [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/), και το οποίο θα αποτελέσει τη βάση, για τη δημιουργία του εικονικού εργαστηρίου που περιγράψαμε στη παράγραφο 1.1. Επιπλέον, για την υποστήριξη 'χώρου αποθήκευσης', θα χρησιμοποιηθεί η υπηρεσία [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που επίσης παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
+Για την εγκατάσταση του εικονικού εργαστηρίου, θα αξιοποιηθεί το ήδη υπάρχον εικονικό εργαστήριο [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/), και το οποίο θα αποτελέσει τη βάση, για τη δημιουργία του εικονικού εργαστηρίου που περιγράψαμε στη παράγραφο 1.1. 
+
+Επιπλέον, για την υποστήριξη 'χώρου αποθήκευσης', θα χρησιμοποιηθεί η υπηρεσία [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που επίσης παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
+
+Για την εγκατάσταση των υπηρεσιών στα containers, θα χρησιμοποιηθεί το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git).
 
 ### 2.1 Προαπαιτούμενα
 
@@ -64,8 +68,18 @@ docker container ls
 
 Παρατηρώντας το αποτέλεσμα του τερματικού, μπορούμε να εντοπίσουμε τα τρία containers που δημιουργήσαμε, καθώς και διάφορα χαρακτηριστικά τους.
 
+### 2.4 Εγκατάσταση των υπηρεσιών στα containers του σμήνους
+
 Στη συνέχεια, εισερχόμαστε στον κόμβο hybrid-linux_master_1, εκτελώντας την ακόλουθη εντολή στο τερματικό:
 
 ```
 docker exec -it -udocker hybrid-linux_master_1 /bin/bash
+```
+
+Έπειτα, κατεβάζουμε το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git) και εισερχόμαστε σε αυτό, μέσω των ακόλουθων εντολών:
+
+```
+sudo git clone https://git.swarmlab.io:3000/Simosps/data_collector_service.git
+
+
 ```
