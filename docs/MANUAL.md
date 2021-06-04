@@ -98,7 +98,7 @@ docker container ls
 Αρχικά, μεταβαίνουμε στην καρτέλα Instances -> Container και επιλέγουμε το container hybrid_linux_master_1, το οποίο αντιστοιχεί στον master του σμήνους. Στη συνέχεια, επιλέγουμε το δίκτυο storage-mongo-replica_netSwarmlabMongo, το οποίο αποτελεί το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων, και πατάμε το κουμπί "Update", όπως φαίνεται στην παρακάτω εικόνα:
 
 
-![Επιλογή δικτύου](./images/picture5.png)
+![Επιλογή δικτύου](./images/picture6.png)
 
 Πραγματοποιούμε την ίδια διαδικασία και για τους δύο workers (hybrid-linux_worker_1 και hybrid-linux_worker_2), ούτβς ώστε να συνδέονται και αυτοί με το δίκτυο της βάσης δεδομένων.
 
