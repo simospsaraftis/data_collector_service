@@ -56,7 +56,7 @@ ___
 
 ![Δημιουργία σμήνους](./images/picture1.png)
 
-Να αναφέρουμε εδώ, ότι για να μπορέσει το εικονικό εργαστήριο να εκτελέσει όλες τις υπηρεσίες που θα παρέχει στους χρήστες, θα πρέπει να ορίσουμε το σμήνος να διαθέτει τουλάχιστον δύο instances, δηλαδή τουλάχιστον έναν master και έναν worker.
+Να αναφέρουμε εδώ, ότι για να μπορέσει το εικονικό εργαστήριο να εκτελέσει όλες τις υπηρεσίες που θα παρέχει στους χρήστες, θα πρέπει να ορίσουμε, το σμήνος να διαθέτει τουλάχιστον δύο instances, δηλαδή τουλάχιστον έναν master και έναν worker.
 
 Εκτελώντας την ακόλουθη εντολή, μπορούμε να δούμε τα containers που έχουν δημιουργηθεί στο [docker](https://www.docker.com/):
 
@@ -68,7 +68,57 @@ docker container ls
 
 Παρατηρώντας το αποτέλεσμα του τερματικού, μπορούμε να εντοπίσουμε τα τρία containers που δημιουργήσαμε, καθώς και διάφορα χαρακτηριστικά τους.
 
-### 2.3 Ορισμός υπηρεσίας για την υποστήριξη 'χώρου αποθήκευσης'
+### 2.3 Κατανόηση της διαδικασίας δημιουργίας του σμήνους (swarm)
+
+Για τη δημιουργία του σμήνους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
+
+```
+version: "2"
+
+services:
+  registry:
+    image: registry
+    ports:
+      - "5000:5000"
+
+  master:
+    image: localhost:5000/hybrid-linux
+    privileged: true
+    environment:
+     - NODENAME=hybrid-linux_master_1.hybrid-linux_hybrid-linux
+     - NODENETWORK=hybrid-linux
+    cap_add:
+      - NET_ADMIN
+    user: root
+    entrypoint: ["sec_bootstrap", "role=master", "sec_master_service_name=master", "sec_worker_service_name=worker"]
+    ports:
+      - "${SSH_PORT}:22"
+    networks:
+      - hybrid-linux
+    volumes:
+      - /home/simos/swarmlab-hybrid/src-local/instance/hybrid-linux/hybrid-linux/project:/project
+
+
+  worker:
+    image: localhost:5000/hybrid-linux
+    privileged: true
+    environment:
+     - NODENAME=hybrid-linux_master_1.hybrid-linux_hybrid-linux
+     - NODENETWORK=hybrid-linux
+    cap_add:
+      - NET_ADMIN
+    user: root
+    entrypoint: ["sec_bootstrap", "role=worker", "sec_master_service_name=master", "sec_worker_service_name=worker"]
+    networks:
+      - hybrid-linux
+    volumes:
+      - /home/simos/swarmlab-hybrid/src-local/instance/hybrid-linux/hybrid-linux/project:/project
+
+networks:
+  hybrid-linux:
+```
+
+### 2.4 Ορισμός υπηρεσίας για την υποστήριξη 'χώρου αποθήκευσης'
 
 Σε αυτή τη παράγραφο θα ορίσουμε την υπηρεσία για την υποστήριξη 'χώρου αποθήκευσης', η οποία θα είναι η [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
 Η συγκεκριμένη υπηρεσία παρέχει μία MongoDB βάση δεδομένων, που θα χρησιμοποιηθεί για την αποθήκευση των συμβάντων που συμβαίνουν στους τερματικούς σταθμούς του σμήνους.
@@ -89,7 +139,9 @@ docker container ls
 
 Παρατηρώντας το αποτέλεσμα του τερματικού, μπορούμε να δούμε εκτός των άλλων, και τις τρεις βάσεις δεδομένων που δημιουργήσαμε.
 
-### 2.4 Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων
+### 2.5 Κατανόηση της διαδικασίας δημιουργίας της βάσης δεδομένων
+
+### 2.6 Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων
 
 Για λόγους καλύτερης διαχείρισης, έχουμε ορίσει η υπηρεσία της βάσης δεδομένων, να βρίσκεται σε διαφορετικό δίκτυο από τους κόμβους του σμήνους.<br/>
 Επομένως, για να μπορούν να μεταφέρονται και να αποθηκεύονται στη βάση δεδομένων τα συμβάντα που συμβαίνουν στους κόμβους του σμήνους, και συλλέγονται μέσω του fluentd, θα πρέπει οι κόμβοι του σμήνους να είναι συνδεδεμένοι και με το δίκτυο της βάσης δεδομένων.<br/>
@@ -104,7 +156,7 @@ docker container ls
 
 
 
-### 2.5 Εγκατάσταση της υπηρεσίας για τη συλλογή δεδομένων στα containers του σμήνους
+### 2.7 Εγκατάσταση της υπηρεσίας για τη συλλογή δεδομένων στα containers του σμήνους
 
 Εισερχόμαστε στον κόμβο hybrid-linux_master_1, εκτελώντας την ακόλουθη εντολή στο τερματικό:
 
