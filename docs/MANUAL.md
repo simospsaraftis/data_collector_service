@@ -33,6 +33,7 @@ ___
 
 Η αρχιτεκτονική του εικονικού εργαστηρίου που πρόκειται να υλοποιήσουμε, φαίνεται στην ακόλουθη εικόνα:
 
+
 ## 2. Εγκατάσταση Εικονικού Εργαστηρίου
 
 Για την εγκατάσταση του εικονικού εργαστηρίου, θα αξιοποιηθεί το ήδη υπάρχον εικονικό εργαστήριο [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/), και το οποίο θα αποτελέσει τη βάση, για τη δημιουργία του εικονικού εργαστηρίου που περιγράψαμε στη παράγραφο 1.1. 
@@ -317,7 +318,7 @@ mongo "mongodb://localhost:30001,localhost:30002,localhost:30003/app_swarmlab" -
 ### 2.6 Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων
 
 Για λόγους καλύτερης διαχείρισης, έχουμε ορίσει η υπηρεσία της βάσης δεδομένων, να βρίσκεται σε διαφορετικό δίκτυο από τους κόμβους του σμήνους.<br/>
-Επομένως, για να μπορούν να μεταφέρονται και να αποθηκεύονται στη βάση δεδομένων τα συμβάντα που συμβαίνουν στους κόμβους του σμήνους, και συλλέγονται μέσω του fluentd, θα πρέπει οι κόμβοι του σμήνους να είναι συνδεδεμένοι και με το δίκτυο της βάσης δεδομένων.<br/>
+Επομένως, για να μπορούν να μεταφέρονται και να αποθηκεύονται στη βάση δεδομένων τα συμβάντα που συμβαίνουν στους κόμβους του σμήνους, και συλλέγονται μέσω του [fluentd](https://www.fluentd.org/), θα πρέπει οι κόμβοι του σμήνους να είναι συνδεδεμένοι και με το δίκτυο της βάσης δεδομένων.<br/>
 
 Για να πραγματοποιήσουμε αυτή τη σύνδεση, θα χρησιμοποιήσουμε το interface του [swarmlab.io](http://docs.swarmlab.io/).<br/>
 Αρχικά, μεταβαίνουμε στην καρτέλα Instances -> Container και επιλέγουμε το container hybrid_linux_master_1, το οποίο αντιστοιχεί στον master του σμήνους. Στη συνέχεια, επιλέγουμε το δίκτυο storage-mongo-replica_netSwarmlabMongo, το οποίο αποτελεί το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων, και πατάμε το κουμπί "Update", όπως φαίνεται στην παρακάτω εικόνα:
@@ -325,11 +326,9 @@ mongo "mongodb://localhost:30001,localhost:30002,localhost:30003/app_swarmlab" -
 
 ![Επιλογή δικτύου](./images/picture6.png)
 
-Πραγματοποιούμε την ίδια διαδικασία και για τους δύο workers (hybrid-linux_worker_1 και hybrid-linux_worker_2), ούτβς ώστε να συνδέονται και αυτοί με το δίκτυο της βάσης δεδομένων.
+Πραγματοποιούμε την ίδια διαδικασία και για τους δύο workers (hybrid-linux_worker_1 και hybrid-linux_worker_2), ούτως ώστε να συνδέονται και αυτοί με το δίκτυο της βάσης δεδομένων.
 
-
-
-### 2.7 Εγκατάσταση της υπηρεσίας για τη συλλογή δεδομένων στα containers του σμήνους
+### 2.7 Εγκατάσταση της υπηρεσίας για τη συλλογή συμβάντων που συμβαίνουν στους κόμβους του σμήνους
 
 Εισερχόμαστε στον κόμβο hybrid-linux_master_1, εκτελώντας την ακόλουθη εντολή στο τερματικό:
 
@@ -343,3 +342,393 @@ docker exec -it -udocker hybrid-linux_master_1 /bin/bash
 sudo git clone https://git.swarmlab.io:3000/Simosps/data_collector_service.git
 cd data_collector_service
 ```
+
+Στη συνέχεια εκτελούμε την ακόλουθη εντολή, ούτως ώστε να δούμε τα υπόλοιπα μέλη του σμήνους:
+
+```
+./bin/swarmlab-nmap
+```
+και λαμβάνουμε ως αποτέλεσμα τις IP διευθύνσεις των δύο worker.
+
+Το αρχείο μέσω του οποίου πραγματοποιείται αυτή η λειτουργία είναι το ακόλουθο bash αρχείο με όνομα swarmlab-nmap που βρίσκεται στον κατάλογο data_collector_service/bin:
+
+```
+#/bin/sh
+
+#H akolouthi entoli emfanizei ta ypoloipa meli tou sminous
+
+#ip=`nslookup hybrid-mpi_master_1.hybrid-mpi_hybrid-mpi | grep Addr | cut -d':' -f2 | grep -v 127.0.`
+ip=`nslookup $NODENAME | grep Addr | cut -d':' -f2 | grep -v 127.0.`
+nmap -sn -oG - $ip/24 | grep Up | grep $NODENETWORK | cut -d ' ' -f 2
+
+```
+
+Τώρα, θα πραγματοποιήσουμε την εγκατάσταση της υπηρεσίας [fluentd](https://www.fluentd.org/) στους κόμβους του σμήνους, ούτως ώστε να συλλέγονται τα συμβάντα που συμβαίνουν σε αυτούς και να αποθηκεύονται στη βάση δεδομένων.
+
+Μεταφερόμαστε στον κατάλογο fluentd που περιέχει τα αρχεία για την εγκατάσταση της υπηρεσίας [fluentd](https://www.fluentd.org/).
+Στον κατάλογο conf βρίσκεται το αρχείο fluent.conf το οποίο περιέχει ρυθμίσεις σχετικά με το πως θέλουμε να λειτουργήσει το [fluentd](https://www.fluentd.org/):
+
+```
+#
+config
+<match debug.*>
+  @type stdout
+</match>
+
+#===========================================================================#
+# block kodika pou dilonei: 
+# 1) apo pou tha diavazei to fluentd logs diaforon programaton, meso tou path
+# 2) ti tha diavazei to fluentd, meso tou @type
+# 3) pos tha onomazei to fluentd ayta pou tha diavazei, meso tou tag
+# ayta pou diavazei to fluentd metatrepontai se json
+# to pos_file einai to arxeio pou tha dimiourgithei mesa ston katalogo
+# gia na gnorizei to fluentd pou itan tin proigoumeni fora
+#============================================================================#
+<source>
+  @type tail
+
+  path /var/log/*.log
+  path_key tailed_path
+
+  tag stats.node
+
+  # parse json
+  <parse>
+    @type json
+  </parse>
+
+  pos_file /tmp/fluentd--1605454018.pos
+</source>
+#=========================================================================#
+
+#=========================================================================#
+# block kodika pou dilonei:
+# 1) apo pou tha diavazei to fluentd plirofories pou o xristis apothikeyei 
+# kai oi opoies thelei na metaferthoun, meso tou path
+# 2) ti tha diavazei to fluentd, meso tou @type
+# 3) pos tha onomazei to fluentd ayta pou tha diavazei, meso tou tag
+# den metatrepei ayta pou to fluentd diavazei se allo typo arxeiou
+# to pos_file einai to arxeio pou tha dimiourgithei mesa ston katalogo
+# gia na gnorizei to fluentd pou itan tin proigoumeni fora
+#==========================================================================#
+<source>
+  @type tail
+
+  path /var/log-in/*/*
+  path_key tailed_path
+
+  tag log.node
+
+  # parse none
+  <parse>
+    @type none
+  </parse>
+
+  pos_file /tmp/fluentd--1605454014.pos
+</source>
+
+
+#====================================================================================#
+# Otan tha symvei kati me tag "log", to fluentd tha to apothikeysei sti vasi dedomenon
+# Orizetai to onoma tis vasis, to onoma xristi, to password, to replica_set
+# I vasi einai mia vasi dedomenon pou exo ftiaxei eidika gia ayton ton skopo
+# Exoyme episis, oti kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
+#=====================================================================================#
+<match log.*>
+  @type copy
+  <store>
+          @type mongo_replset
+
+          database app_swarmlab
+          collection logs
+          nodes swarmlabmongo1:27017,swarmlabmongo2:27017,swarmlabmongo3:27017
+
+          user app_swarmlab
+          password app_swarmlab
+
+          replica_set rs0
+          num_retries 60
+          capped
+          capped_size 100m
+
+
+          <buffer>
+            flush_interval 20s
+          </buffer>
+  </store>
+  <store>
+        @type stdout
+  </store>
+
+#  <store>
+#         @type file
+#         path /tmp/mylog
+#         <buffer>
+#           timekey 1d
+#           timekey_use_utc true
+#           timekey_wait 10s
+#         </buffer>
+#  </store>
+
+
+</match>
+
+#==================================================================================================#
+# Antistoixa, otan tha symvei kati me tag "stats", to fluentd tha to apothikeysei sti vasi dedomenon
+# Orizetai to onoma tis vasis, to onoma xristi, to password, to replica_set
+# I vasi einai mia vasi dedomenon pou exo ftiaxei eidika gia ayton ton skopo
+# Exoyme episis, oti kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
+#==================================================================================================#
+<match stats.*>
+  @type copy
+  <store>
+          @type mongo_replset
+
+          database app_swarmlab
+          collection logs
+          nodes swarmlabmongo1:27017,swarmlabmongo2:27017,swarmlabmongo3:27017
+
+          user swarmlab
+          password swarmlab
+
+          replica_set rs0
+          num_retries 60
+          capped
+          capped_size 100m
+  </store>
+  <store>
+       @type stdout
+  </store>
+</match>
+
+```
+
+Επίσης, διαθέτουμε ένα αρχείο γραμμένο σε yaml με όνομα fluentd.yml, το οποίο περιλαμβάνει όλες εκείνες τι εντολές και εγκαταστάσεις που θέλουμε να πραγματοποιήσουμε απομακρυσμένα στους κόμβους του συστήματος μέσω του [ansible](https://www.ansible.com/):
+
+```
+---
+- hosts: service
+  remote_user: docker
+  gather_facts: no
+  vars:
+    user: "docker"
+  tasks:
+
+     # ----------------------------------------------------
+     # task gia tin enimerosi ton idi egatestimenon paketon
+     # ----------------------------------------------------
+    - name: apt update packages
+      become: true
+      apt:
+        update_cache: 'yes'
+        force_apt_get: 'yes'
+        upgrade: 'dist'
+        cache_valid_time: 3600
+        install_recommends: true
+        autoremove: true
+
+     # ----------------------------------------------
+     # task gia tin egatastasi ton akolouthon paketon
+     # ----------------------------------------------
+    - name: apt install packages
+      become: true
+      apt:
+        update_cache: 'yes'
+        force_apt_get: 'yes'
+        install_recommends: true
+        autoremove: true
+        name: "{{ packages }}"
+      vars:
+        packages:
+         - build-essential
+         - git
+         - flex
+         - bison
+         - traceroute
+         - curl
+         - lynx
+         - ruby
+         - ruby-dev
+
+     # --------------------------------------------------------------------------------
+     # task gia ti dimiourgia directory gia to fluentd apomakrismena me dikaiomata root
+     # pou na anikei ston xristi kai sto group docker kai na exei pliri dikaiomata
+     # --------------------------------------------------------------------------------
+    - name: make /var/log-in
+      become: true
+      file:
+        path: "/var/log-in"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0777'
+
+     # -----------------------------------------------------------------------------------------
+     # gem begin
+     # tasks gia tin egatastasi paketon pou einai anagaia gia ti leitourgia tou fluentd meso gem
+     # -----------------------------------------------------------------------------------------
+    - name: make dir for gem
+      become: true
+      file:
+        path: "/home/docker/.gem"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0755'
+
+    - name: gem install  fluentd
+      #become: true
+      gem:
+        name: fluentd
+        version: 1.12.0
+        state: present
+      environment:
+        CONFIGURE_OPTS: '--disable-install-doc'
+        PATH: '/home/docker/.gem/ruby/2.5.0/bin:{{ ansible_env.PATH }}'
+
+    - name: gem install fluent-plugin-mongo
+      #become: true
+      gem:
+        name: fluent-plugin-mongo
+        state: present
+
+    - name: gem install oj
+      #become: true
+      gem:
+        name: oj
+        state: present
+
+    - name: gem install json
+      #become: true
+      gem:
+        name: json
+        state: present
+
+    - name: gem install async-http
+      #become: true
+      gem:
+        name: async-http
+        version: 0.54.0
+        state: present
+
+    - name: gem install ext-monitor
+      #become: true
+      gem:
+        name: ext_monitor
+        version: 0.1.2
+        state: present
+
+     # ------------------------
+     # gem end
+     # -------------------------
+
+     # --------------------------------------------------------------------------------------------------
+     # task gia ti dimiourgia directory gia to config arxeio tou fluentd apomakrismena me dikaiomata root
+     # pou na anikei ston xristi kai sto group docker kai na exei sygekrimena dikaiomata
+     # --------------------------------------------------------------------------------------------------
+    - name: make dir fluentd
+      become: true
+      file:
+        path: "/fluentd/etc"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0755'
+
+    - name: make dir fluentd
+      become: true
+      file:
+        path: "/fluentd/plugins"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0755'
+
+     # ----------------------------------------------------------------------------------------------------------
+     # task pou antigrafei to fluentd.conf arxeio pou exoume dimiourgisei kai periexei to configuration tou 
+     # fluentd, sto directory pou dimiourgisame parapano me xristi kai group to docker kai sygekrimena dikaiomata
+     # ----------------------------------------------------------------------------------------------------------
+    - name: cp fluentd.conf
+      become: true
+      copy:
+        src: "./conf/fluent.conf"
+        dest: /fluentd/etc/fluent.conf
+        owner: docker
+        group: docker
+        mode: 0755
+
+     # --------------------------------
+     # task gia tin ekinisi tou fluentd
+     # --------------------------------
+    - name: start fluentd background
+      shell: nohup /home/docker/.gem/ruby/2.5.0/bin/fluentd -c /fluentd/etc/fluent.conf -vv </dev/null >/dev/null 2>&1 &
+
+```
+
+
+Για να εγκαταστήσουμε και να τρέξουμε το [ansible](https://www.ansible.com/), το οποίο θα εγκαταστήσει την υπηρεσία [fluentd](https://www.fluentd.org/) σε όλους τους κόμβους του σμήνους, έχουμε δημιουργήσει το ακόλουθο bash αρχείο με όνομα fluentd.yml.sh: 
+
+```
+!/bin/sh
+
+# Entoli pou enimeronei ta idi egatestimena paketa
+sudo apt update -y
+
+# Entoli pou pragmatopoiei egatastasi tou ansible
+sudo apt install -y ansible sshpass
+
+# Entoli pou orizei ton xristi tou directory fluentd
+sudo chown $(whoami) /data_collector_service/fluentd/
+
+# Entoli pou dinei dikaiomata read,write kai execute sto directory fluentd
+sudo chmod +rwx /data_collector_service/fluentd/
+
+
+# Entoli pou dimiourgei enan kryfo katalogo gia to ansible sto docker
+sudo mkdir -p /home/docker/.ansible
+
+#Entoli pou orizei oti o xristis tou directory docker tha einai o docker
+sudo chown docker.docker -R /home/docker
+
+
+# Entoli pou metaferei to arxeio me to default configuration tou ansible
+# ston katalogo /etc/ansible, opou exei egatastathei to ansible
+sudo cp ../ansible/ansible.cfg /etc/ansible/ansible.cfg
+
+
+# Me tis parakato entoles vriskoume tin topiki IPv4 kai IPv6 dieythynsi
+ip4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+ip6=$(/sbin/ip -o -6 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+
+
+# Entoli pou dimiourgei kai prosthetei sto arxeio inventory.yml ta mixanakia sta opoia epithymoume na egatastahei to fluentd
+echo "[service]" > /data_collector_service/fluentd/inventory.yml
+/project/bin/swarmlab-nmap >> /data_collector_service/fluentd/inventory.yml
+
+
+
+# Entoli pou prosthetei kai ton master sto inventory.yml,
+# dioti theloume na egatastathei kai se ayton to fluentd
+echo $ip4 >> /data_collector_service/fluentd/inventory.yml
+
+
+# Entoli pou trexei to ansible-playbook,
+# outos oste na pragmatopoiithoun oi egatastaseis sta mixanakia pou anaferontai sto inventory.yml
+ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --ask-pass --ask-become-pass
+
+
+```
+
+Τώρα που έχουμε μελετήσει τα αρχεία, εκτελούμε το αρχείο fluentd.yml.sh μέσω της ακόλουθης εντολής, όπου στα σημεία που ζητείται password, πληκτρολογούμε το password του συστήματος:
+```
+./fluentd.yml.sh
+```
+
+Εάν δεν υπάρχουν κόκκινα μηνύματα σφάλματος, η υπηρεσία έχει εγκατασταθεί επιτυχώς.
+
+
+Στη συγκεκριμένη παράγραφο, καταφέραμε να εγκαταστήσουμε την υπηρεσία [fluentd](https://www.fluentd.org/), για τη συλλογή συμβάντων που συμβαίνουν στους κόμβους του σμήνους και την αποθήκευσή τους στη βάση δεδομένων. Μένει να εγκαταστήσουμε την εφαρμογή για τη μεταφορά των δεδομένων από τη βάση στους κόμβους του σμήνους.
+
+
+### 2.8 Εγκατάσταση της εφαρμογής για τη μεταφορά των δεδομένων από τη βάση στους κόμβους του σμήνους μέσω websocket
+
