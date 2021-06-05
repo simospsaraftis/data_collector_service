@@ -6,9 +6,9 @@
     user: "docker" 
   tasks:
 
-     # ------------------------
-     # apt update
-     # -------------------------
+     # ----------------------------------------------------
+     # task gia tin enimerosi ton idi egatestimenon paketon
+     # ----------------------------------------------------
     - name: apt update packages
       become: true
       apt:
@@ -19,9 +19,9 @@
         install_recommends: true
         autoremove: true
 
-     # ------------------------
-     # apt install packages
-     # -------------------------
+     # ----------------------------------------------
+     # task gia tin egatastasi ton akolouthon paketon
+     # ----------------------------------------------
     - name: apt install packages
       become: true
       apt:
@@ -42,9 +42,10 @@
          - ruby
          - ruby-dev
 
-     # ------------------------
-     # directory for fluentd
-     # -------------------------
+     # --------------------------------------------------------------------------------
+     # task gia ti dimiourgia directory gia to fluentd apomakrismena me dikaiomata root
+     # pou na anikei ston xristi kai sto group docker kai na exei pliri dikaiomata
+     # --------------------------------------------------------------------------------
     - name: make /var/log-in
       become: true
       file:
@@ -54,9 +55,10 @@
         group: docker
         mode: '0777'
 
-     # ------------------------
+     # -----------------------------------------------------------------------------------------
      # gem begin
-     # -------------------------
+     # tasks gia tin egatastasi paketon pou einai anagaia gia ti leitourgia tou fluentd meso gem
+     # -----------------------------------------------------------------------------------------
     - name: make dir for gem
       become: true
       file:
@@ -112,9 +114,10 @@
      # gem end
      # -------------------------
 
-     # ------------------------
-     # mkdir directory for fluent
-     # -------------------------
+     # --------------------------------------------------------------------------------------------------
+     # task gia ti dimiourgia directory gia to config arxeio tou fluentd apomakrismena me dikaiomata root
+     # pou na anikei ston xristi kai sto group docker kai na exei sygekrimena dikaiomata
+     # --------------------------------------------------------------------------------------------------
     - name: make dir fluentd
       become: true
       file:
@@ -133,9 +136,10 @@
         group: docker
         mode: '0755'
 
-     # ------------------------
-     # cp fluentd.conf
-     # -------------------------
+     # ----------------------------------------------------------------------------------------------------------
+     # task pou antigrafei to fluentd.conf arxeio pou exoume dimiourgisei kai periexei to configuration tou 
+     # fluentd, sto directory pou dimiourgisame parapano me xristi kai group to docker kai sygekrimena dikaiomata
+     # ----------------------------------------------------------------------------------------------------------
     - name: cp fluentd.conf
       become: true
       copy:
@@ -145,9 +149,9 @@
         group: docker
         mode: 0755
 
-     # ------------------------
-     # start fluentd
-     # -------------------------
+     # --------------------------------
+     # task gia tin ekinisi tou fluentd
+     # --------------------------------
     - name: start fluentd background
       shell: nohup /home/docker/.gem/ruby/2.5.0/bin/fluentd -c /fluentd/etc/fluent.conf -vv </dev/null >/dev/null 2>&1 &
  

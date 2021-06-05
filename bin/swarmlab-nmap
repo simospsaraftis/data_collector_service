@@ -1,5 +1,7 @@
 #/bin/sh
 
+#H akolouthi entoli emfanizei ta ypoloipa meli tou sminous
+
 #ip=`nslookup hybrid-mpi_master_1.hybrid-mpi_hybrid-mpi | grep Addr | cut -d':' -f2 | grep -v 127.0.`
 ip=`nslookup $NODENAME | grep Addr | cut -d':' -f2 | grep -v 127.0.`
 nmap -sn -oG - $ip/24 | grep Up | grep $NODENETWORK | cut -d ' ' -f 2
