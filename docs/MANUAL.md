@@ -714,6 +714,7 @@ echo $ip4 >> /data_collector_service/fluentd/inventory.yml
 
 # Entoli pou trexei to ansible-playbook,
 # outos oste na pragmatopoiithoun oi egatastaseis sta mixanakia pou anaferontai sto inventory.yml
+# Orizoume to ansible na anoigei 5 syndeseis taytoxrona
 ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --ask-pass --ask-become-pass
 
 
