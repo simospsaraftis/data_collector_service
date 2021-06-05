@@ -174,6 +174,124 @@ docker container ls
 
 ### 2.5 Κατανόηση της διαδικασίας δημιουργίας της βάσης δεδομένων
 
+Για τον ορισμό των χαρακτηριστικών των containers που θα περιέχουν τη βάση δεδομένων, καθώς και για τη δημιουργία και διάθεση των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
+
+```
+version: '3.8'
+
+services: 
+
+    # setup MongoDB cluster for production
+    mongo-replica-setup:
+        container_name: mongo-setup
+        image: 'mongo:4.2'
+        restart: on-failure
+        networks:
+            - netSwarmlabMongo
+        volumes:
+        - ./.docker/mongodb/scripts/mongosetup.sh:/scripts/mongosetup.sh
+        # entrypoint: ["bash"]
+        entrypoint: ["bash", "/scripts/mongosetup.sh" ]
+        env_file:
+            - .env
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+        depends_on:
+            - swarmlabmongo1
+            - swarmlabmongo2
+            - swarmlabmongo3
+
+    swarmlabmongo1:
+        hostname: 'swarmlabmongo1'
+        container_name: 'swarmlabmongo1'
+        image: 'mongo:4.2'
+        restart: 'on-failure'
+        command: ["-f", "/etc/mongod.conf", "--keyFile", "/auth/file.key", "--replSet", "${MONGO_REPLICA_SET_NAME}", "--bind_ip_all"]
+        expose: 
+            - 27017
+        ports: 
+            - 30001:27017 
+        networks: 
+            - netSwarmlabMongo
+        volumes:
+            - swarmlabmongoData1:/data/db
+            - swarmlabmongoLog1:/var/log/mongodb
+            - ./.docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+            - ./.docker/mongodb/mongod.conf:/etc/mongod.conf
+            - ./.docker/mongodb/file.key:/auth/file.key
+        healthcheck:
+            test: test $$(echo "rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+            interval: 30s
+            start_period: 60s
+        env_file:
+            - .env
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+            MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+
+    swarmlabmongo2:
+        hostname: 'swarmlabmongo2'
+        container_name: 'swarmlabmongo2'
+        image: 'mongo:4.2'
+        command: ["-f", "/etc/mongod.conf", "--keyFile", "/auth/file.key", "--replSet", "${MONGO_REPLICA_SET_NAME}", "--bind_ip_all"]
+        restart: 'on-failure'
+        expose: 
+            - 27017
+        ports: 
+            - 30002:27017  
+        networks: 
+            - netSwarmlabMongo
+        volumes:
+            - swarmlabmongoData2:/data/db
+            - swarmlabmongoLog2:/var/log/mongodb
+            - ./.docker/mongodb/mongod.conf:/etc/mongod.conf
+            - ./.docker/mongodb/file.key:/auth/file.key
+        env_file:
+            - .env
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+            MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+        depends_on: 
+            - swarmlabmongo1
+
+    swarmlabmongo3:
+        hostname: 'swarmlabmongo3'
+        container_name: 'swarmlabmongo3'
+        image: 'mongo:4.2'
+        command: ["-f", "/etc/mongod.conf", "--keyFile", "/auth/file.key", "--replSet", "${MONGO_REPLICA_SET_NAME}", "--bind_ip_all"]
+        restart: 'on-failure'
+        expose: 
+            - 27017
+        ports: 
+            - 30003:27017  
+        networks: 
+            - netSwarmlabMongo
+        volumes:
+            - swarmlabmongoData3:/data/db
+            - swarmlabmongoLog3:/var/log/mongodb
+            - ./.docker/mongodb/mongod.conf:/etc/mongod.conf
+            - ./.docker/mongodb/file.key:/auth/file.key
+        env_file:
+            - .env
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+            MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+        depends_on: 
+            - swarmlabmongo1
+
+volumes: 
+    swarmlabmongoData1:
+    swarmlabmongoData2:
+    swarmlabmongoData3:
+    swarmlabmongoLog1:
+    swarmlabmongoLog2:
+    swarmlabmongoLog3:
+```
+
 ### 2.6 Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων
 
 Για λόγους καλύτερης διαχείρισης, έχουμε ορίσει η υπηρεσία της βάσης δεδομένων, να βρίσκεται σε διαφορετικό δίκτυο από τους κόμβους του σμήνους.<br/>
