@@ -70,7 +70,7 @@ docker container ls
 
 ### 2.3 Κατανόηση της διαδικασίας δημιουργίας του σμήνους (swarm)
 
-Για τη δημιουργία του σμήνους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
+Για τον ορισμό των χαρακτηριστικών των κόμβων από τα οποία θα αποτελείται το σμήνος, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
 
 ```
 version: "2"
@@ -117,6 +117,39 @@ services:
 networks:
   hybrid-linux:
 ```
+
+Για τη δημιουργία του σμήνους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το αρχείο swarmlab-sec και πιο συγκεκριμένα την ακόλουθη συνάρτηση για τη δημιουργία του master:
+
+```
+up_master ()
+{
+    printf "\\n\\n===> SPIN UP MASTER NODE"
+    printf "\\n%s\\n" "$HEADER"
+    echo "$ docker-compose up -d master"
+    printf "\\n"
+    docker-compose up -d master
+}
+```
+και την ακόλουθη συνάρτηση για τον ορισμό του πλήθους και την δημιουργία των workers:
+```
+up_workers ()
+{
+    printf "\\n\\n===> SPIN UP WORKER NODES"
+    printf "\\n%s\\n" "$HEADER"
+    echo "$ docker-compose up -d worker"
+    printf "\\n"
+    docker-compose up -d worker 
+
+    printf "\\n"
+    printf "\\n%s\\n" "$HEADER"
+
+    NUM_WORKER=$((SIZE - 1))
+    echo "$ docker-compose scale worker=$NUM_WORKER"
+    printf "\\n"
+    docker-compose scale worker=${NUM_WORKER}
+}
+```
+
 
 ### 2.4 Ορισμός υπηρεσίας για την υποστήριξη 'χώρου αποθήκευσης'
 
