@@ -174,7 +174,7 @@ docker container ls
 
 ### 2.5 Κατανόηση της διαδικασίας δημιουργίας της βάσης δεδομένων
 
-Για τον ορισμό των χαρακτηριστικών των containers που θα περιέχουν τη βάση δεδομένων, καθώς και για τη δημιουργία και διάθεση των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
+Για τον ορισμό των χαρακτηριστικών των containers που θα περιέχουν τη βάση δεδομένων, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
 
 ```
 version: '3.8'
@@ -291,7 +291,16 @@ volumes:
     swarmlabmongoLog2:
     swarmlabmongoLog3:
 ```
+Για τη δημιουργία και διάθεση των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο αρχείο με όνομα run.sh:
 
+```
+#!/bin/sh
+
+docker-compose down
+docker-compose rm
+docker container rm swarmlabmongo1 swarmlabmongo2 swarmlabmongo3
+docker-compose up -d
+```
 ### 2.6 Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων
 
 Για λόγους καλύτερης διαχείρισης, έχουμε ορίσει η υπηρεσία της βάσης δεδομένων, να βρίσκεται σε διαφορετικό δίκτυο από τους κόμβους του σμήνους.<br/>
