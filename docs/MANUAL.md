@@ -154,11 +154,9 @@ up_workers ()
 ### 2.4 Ορισμός υπηρεσίας για την υποστήριξη 'χώρου αποθήκευσης'
 
 Σε αυτή τη παράγραφο θα ορίσουμε την υπηρεσία για την υποστήριξη 'χώρου αποθήκευσης', η οποία θα είναι η [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
-Η συγκεκριμένη υπηρεσία παρέχει μία MongoDB βάση δεδομένων, που θα χρησιμοποιηθεί για την αποθήκευση των συμβάντων που συμβαίνουν στους τερματικούς σταθμούς του σμήνους.
+Η συγκεκριμένη υπηρεσία παρέχει ένα replica set, δηλαδή ένα σύνολο που αποτελείται από τρια MongoDB instances, τα οποία διατηρούν το ίδιο σύνολο αρχείων. Το replica set αυτό, θα χρησιμοποιηθεί για την αποθήκευση των συμβάντων που συμβαίνουν στους τερματικούς σταθμούς του σμήνους.
 
-Στο [swarmlab.io](http://docs.swarmlab.io/), μεταβαίνουμε στην καρτέλα Private/Local -> Storage, εκτελούμε την εντολή που θα μας εμφανίσει το σύστημα, και επιλέγουμε να σηκώσουμε τη βάση δεδομένων. Το [swarmlab.io](http://docs.swarmlab.io/), σηκώνει τρια replicas της υπηρεσίας, ωστόσο εμείς θα χρειαστούμε μόνο το ένα.
-
-Εκτελούμε στο τερματικό την εντολή που μας εμφανίζει το παράθυρο, και επιλέγουμε να σηκώσουμε τη βάση δεδομένων:
+Για να θέσουμε σε λειτουργία το replica set, στο [swarmlab.io](http://docs.swarmlab.io/), μεταβαίνουμε στην καρτέλα Private/Local -> Storage, εκτελούμε την εντολή που θα μας εμφανίσει το σύστημα, και επιλέγουμε να σηκώσουμε τα τρια MongoDB instances:
 
 ![Υπηρεσία βάσης](./images/picture3.png)
 
@@ -170,11 +168,11 @@ docker container ls
 
 ![Λίστα container](./images/picture4.png)
 
-Παρατηρώντας το αποτέλεσμα του τερματικού, μπορούμε να δούμε εκτός των άλλων, και τις τρεις βάσεις δεδομένων που δημιουργήσαμε.
+Παρατηρώντας το αποτέλεσμα του τερματικού, μπορούμε να δούμε εκτός των άλλων, και τα τρία MongoDB instances που δημιουργήσαμε.
 
 ### 2.5 Κατανόηση της διαδικασίας δημιουργίας της βάσης δεδομένων
 
-Για τον ορισμό των χαρακτηριστικών των containers που θα περιέχουν τη βάση δεδομένων, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
+Για τον ορισμό των MongoDB instances και των χαρακτηριστικών τους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
 
 ```
 version: '3.8'
@@ -291,7 +289,7 @@ volumes:
     swarmlabmongoLog2:
     swarmlabmongoLog3:
 ```
-Για τη δημιουργία και διάθεση των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο αρχείο με όνομα run.sh:
+Για τη δημιουργία και διάθεση των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο bash αρχείο με όνομα run.sh:
 
 ```
 #!/bin/sh
@@ -301,6 +299,21 @@ docker-compose rm
 docker container rm swarmlabmongo1 swarmlabmongo2 swarmlabmongo3
 docker-compose up -d
 ```
+Οι default ρυθμίσεις των τριών MongoDB instances, βρίσκονται στο ακόλουθο bash αρχείο με όνομα connect.mongo.sh:
+
+```
+
+MONGO_INITDB_ROOT_USERNAME=swarmlab
+MONGO_INITDB_ROOT_PASSWORD=swarmlab
+MONGO_INITDB_DATABASE=app_swarmlab
+MONGO_INITDB_USERNAME=app_swarmlab
+MONGO_INITDB_PASSWORD=app_swarmlab
+MONGO_REPLICA_SET_NAME=rs0
+
+mongo "mongodb://localhost:30001,localhost:30002,localhost:30003/$MONGO_INITDB_DATABASE" -u $MONGO_INITDB_USERNAME
+mongo "mongodb://localhost:30001,localhost:30002,localhost:30003/app_swarmlab" -u app_swarmlab
+```
+
 ### 2.6 Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων
 
 Για λόγους καλύτερης διαχείρισης, έχουμε ορίσει η υπηρεσία της βάσης δεδομένων, να βρίσκεται σε διαφορετικό δίκτυο από τους κόμβους του σμήνους.<br/>
