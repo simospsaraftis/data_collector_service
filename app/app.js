@@ -5,7 +5,10 @@ var app = express();
 const helmet = require('helmet');
 app.use(helmet());
 app.use(express.json());
+
+//I porta stin opoia tha akouei o server
 var serverPort = "8085";
+
 var server = http.createServer(app);
 const io = require("socket.io")(server);
 require('dotenv').config();
