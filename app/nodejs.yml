@@ -37,14 +37,14 @@
         dest: /client_file/client.js
         owner: docker
         group: docker
-        mode: '0777'
+        mode: '0755'
 
      # ------------------------
      # nodesource get
      # -------------------------
     - name: nodesource get
       get_url:
-        url: https://deb.nodesource.com/setup_15.x
+        url: https://deb.nodesource.com/setup_16.x
         dest: /client_file/nodesource_setup.sh
 
      # ------------------------
@@ -104,11 +104,12 @@
         mode: '0755'
 
     - name: npm install socket.io-client
+      become: true
       npm:
         name: socket.io-client
         version: 4.1.2
         state: present
-        path: /var/client_file
+        path: /client_file
 
      # ------------------------
      # npm end
