@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#Entoli pou pragmatopoiei enimerosi ton idi egatestimenon paketon
 sudo apt update -y
 
 # Entoli pou pragmatopoiei egatastasi tou ansible
