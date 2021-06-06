@@ -26,17 +26,18 @@ const io = require("socket.io")(server, {
 });
 */
 
-//------------Server Listen---------------//
-
+//----------------------------------------
+//O server akouei gia tyxon syndeseis client se ayton, sto port pou vrisketai sti metavliti serverPort
 server.listen(serverPort, () => {
 		console.log("HTTP server listening on port %s", serverPort);
 });
 
-//----------------------------------------//
+//-----------------------------------------
 
 
-//-----------Socket.IO-------------//
-
+//--------------------------------------------
+//Otan kapoios client pragmatopoiisei sindesi ston server, emfanizetai katallilo minima
+//Antistoixo minima emfanizetai kai otan o client aposyndethei
 io.on('connection', (socket) => {
 		console.log("Client connected");
 		socket.on('disconnect',() => {
@@ -44,16 +45,20 @@ io.on('connection', (socket) => {
 		});
 });
 
-
+//Stathera mesa stin opoia pragmatopoieitai i apostoli ton dedomenon pou eiserxontai sti vasi, stous komvous tou sminous
 const transmit = change => {
 		io.emit('change_msg',change);
 }
 
-//-------------------------------------------//
+//-------------------------------------------
 
 
-//---------------ChangeStream---------------//
-
+//------------------------------------------------
+//Block kodika meso tou opoiou o server pragmatopoiei syndesi me ti vasi kai anoigei ena ChangeStram gias na akouei tyxon
+//alages pou symvainoun sti vasi kai na tis stelnei stous ypoloipous komvous tou sminous
+//Ta stoixeia syndesis sti vasi einai apothikeymena mesa se environment variables
+//Se periptosi pou gia kapoio logo den einai epityxis i sndesi me ti vasi otan pragmatopoieitai syndesi gia proti fora,
+//o server epixeirei na syndethei xana me ti vasi ana 5 deyterolepta
 var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
 var connectWithRetry = function() {
@@ -94,4 +99,4 @@ var connectWithRetry = function() {
 };
 connectWithRetry();
 
-//---------------------------------------------//
+//----------------------------------------------------------------------------------------------
