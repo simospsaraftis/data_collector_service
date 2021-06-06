@@ -875,3 +875,202 @@ socket.on('change_msg', (msg) => {
 });
 
 ```
+Μεταβαίνουμε στον κατάλογο /data_collector_service/app. Θα εγκαταστήσουμε το nodejs στον master και όλα τα πακέτα που χρειάζονται ούτως ώστε να μπορέσει να λειτουργήσει ως server.<br/>
+Ο κώδικας για την εγκατάσταση του nodejs και των πακέτων που χρειάζονται, βρίσκεται στο ακόλουθο bash αρχείο με όνομα app.js.sh:
+
+```
+# Egatastasi tou nodejs kai ton aparaititon paketon, outos oste na leitourgisei i ypiresia client-server
+curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh \
+&& sudo bash nodesource_setup.sh \
+&& sudo apt-get install -y nodejs \
+&& npm install \
+&& npm install socket.io
+&& npm install socket.io-client \
+&& npm install mongodb \
+&& npm install express \
+&& npm install helmet \
+&& npm install dotenv
+
+```
+
+Εκτελούμε το bash αρχείο μέσω της ακόλουθης εντολής:
+
+```
+sudo ./app.js.sh
+```
+
+Έχουμε εγκαταστήσει το nodejs και τα απαραίτητα πακέτα για την εκτέλεση του server στον master. Τώρα, θα πρέπει να εγκαταστήσουμε το nodejs και στους workers, οι οποίοι θα αποτελέσουν τους clients. Για να το επιτύχουμε αυτό θα χρησιμοποιήσουμε το [ansible](https://www.ansible.com/). Για την εγκατάσταση θα χρησιμοποιήσουμε ένα αρχείο γραμμένο σε yaml με όνομα nodejs.yml, το οποίο περιλαμβάνει όλες εκείνες τι εντολές και εγκαταστάσεις που θέλουμε να πραγματοποιήσουμε απομακρυσμένα στους κόμβους του συστήματος μέσω του [ansible](https://www.ansible.com/):
+
+```
+---
+- hosts: service
+  remote_user: docker
+  gather_facts: no
+  vars:
+    user: "docker"
+  tasks:
+
+     # ----------------------------------------------------------------------
+     # task pou diagrafei to directory client_file ean yparxei idi stous workers
+     # ----------------------------------------------------------------------
+    - name: client directory remove
+      become: true
+      file:
+        state: absent
+        path: /client_file
+
+     # ----------------------------------------------------------
+     # task pou dimiourgei to directory client_file stous workers
+     # ----------------------------------------------------------
+    - name: make /client_file
+      become: true
+      file:
+        path: "/client_file/"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0777'
+
+     # ---------------------------------------------------------------------------------------------
+     # task pou antigrafei to arxeio client.js pou periexei ton kodika gia ton client, stous workers
+     # ---------------------------------------------------------------------------------------------
+    - name: cp client.js
+      become: true
+      copy:
+        src: "./../app/client.js"
+        dest: /client_file/client.js
+        owner: docker
+        group: docker
+        mode: '0755'
+
+     # --------------------------------------------------------------
+     # task pou katevazei to nodesource_setup.sh arxeio stous workers
+     # --------------------------------------------------------------
+    - name: nodesource get
+      get_url:
+        url: https://deb.nodesource.com/setup_16.x
+        dest: /client_file/nodesource_setup.sh
+
+     # ------------------------------------------------------------
+     # task pou ektelei to nodesource_setup.sh arxeio stous workers
+     # ------------------------------------------------------------
+    - name: start nodesource run
+      become: true
+      command: bash /client_file/nodesource_setup.sh
+
+     # --------------------------------------------------------------------
+     # task pou diagrafei to nodesource_setup.sh arxeio meta tin egatastasi
+     # --------------------------------------------------------------------
+    - name: start nodesource remove
+      become: true
+      file: 
+        state: absent
+        path: /client_file/nodesource_setup.sh
+
+     # ------------------------------------------------------------------
+     # task gia tin enimerosi ton idi egatestimenon paketon stous workers
+     # ------------------------------------------------------------------
+    - name: apt update packages
+      become: true
+      apt:
+        update_cache: 'yes'
+        force_apt_get: 'yes'
+        upgrade: 'dist'
+        cache_valid_time: 3600
+        install_recommends: true
+        autoremove: true
+
+     # ------------------------------------------------
+     # task gia tin egatastasi tou nodejs stous workers
+     # ------------------------------------------------
+    - name: apt install packages
+      become: true
+      apt:
+        update_cache: 'yes'
+        force_apt_get: 'yes'
+        install_recommends: true
+        autoremove: true
+        name: "{{ packages }}"
+      vars:
+        packages:
+         - nodejs
+
+     # ------------------------------------------------------------------------------------------
+     # npm begin
+     # tasks gia tin egatastasi paketon pou einai anagaia gia ti leitourgia tou nodejs meso npm
+     # ------------------------------------------------------------------------------------------
+    - name: make dir for npm
+      become: true
+      file:
+        path: "/home/docker/.npm"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0755'
+
+    - name: npm install socket.io-client
+      become: true
+      npm:
+        name: socket.io-client
+        version: 4.1.2
+        state: present
+        path: /client_file
+
+     # ------------------------
+     # npm end
+     # -------------------------
+
+
+```
+
+Για να εγκαταστήσουμε και να τρέξουμε το [ansible](https://www.ansible.com/), το οποίο θα εγκαταστήσει την υπηρεσία [node.js](https://nodejs.org/en/) σε όλους τους κόμβους του σμήνους, έχουμε δημιουργήσει το ακόλουθο bash αρχείο με όνομα nodejs.yml.sh:
+
+```
+#!/bin/sh
+
+#Entoli pou pragmatopoiei enimerosi ton idi egatestimenon paketon
+sudo apt update -y
+
+# Entoli pou pragmatopoiei egatastasi tou ansible
+sudo apt install -y ansible sshpass
+
+# Entoli pou orizei ton xristi tou directory app
+sudo chown $(whoami) /data_collector_service/app
+
+# Entoli pou dinei dikaiomata read,write kai execute sto directory app
+sudo chmod +rwx /data_collector_service/app
+
+
+# Entoli pou dimiourgei enan kryfo katalogo gia to ansible sto docker
+sudo mkdir -p /home/docker/.ansible
+
+#Entoli pou orizei oti o xristis tou directory docker tha einai o docker
+sudo chown docker.docker -R /home/docker
+
+
+# Entoli pou metaferei to arxeio me to default configuration tou ansible
+# ston katalogo /etc/ansible, opou exei egatastathei to ansible
+sudo cp ../ansible/ansible.cfg /etc/ansible/ansible.cfg
+
+
+# Me tis parakato entoles vriskoume tin topiki IPv4 kai IPv6 dieythynsi
+ip4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+ip6=$(/sbin/ip -o -6 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+
+
+# Entoli pou dimiourgei kai prosthetei sto arxeio inventory.yml ta mixanakia sta opoia epithymoume na egatastahei to fluentd
+echo "[service]" > /data_collector_service/app/inventory.yml
+/data_collector_service/bin/swarmlab-nmap >> /data_collector_service/app/inventory.yml
+
+
+# Den theloume na kanoume tis sygekrimenes egatastaseis ston master
+#echo $ip4 >> /data_collector_service/app/inventory.yml
+
+
+# Entoli pou trexei to ansible-playbook,
+# outos oste na pragmatopoiithoun oi egatastaseis sta mixanakia pou anaferontai sto inventory.yml
+# Orizoume to ansible na anoigei 5 syndeseis taytoxrona
+ansible-playbook -u docker -i /data_collector_service/app/inventory.yml nodejs.yml  -f 5  --ask-pass --ask-become-pass
+
+
+```
