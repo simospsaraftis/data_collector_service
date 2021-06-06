@@ -21,11 +21,43 @@
     - name: make /client_file
       become: true
       file:
-        path: "/client_file/"
+        path: "/var/client_file/"
         state: directory
         owner: docker
         group: docker
         mode: '0777'
+
+     # ------------------------
+     # npm begin
+     # -------------------------
+    - name: make dir for npm
+      become: true
+      file:
+        path: "/home/docker/.npm"
+        state: directory
+        owner: docker
+        group: docker
+        mode: '0755'
+
+    - name: npm install socket.io-client
+      #become: false
+      npm:
+        name: socket.io-client
+        version: 4.1.2
+        state: present
+        path: /var/client_file/
+
+    - name: npm install fs
+      #become: false
+      npm:
+        name: fs
+        version: latest
+        state: present
+        path: /var/client_file/
+
+     # ------------------------
+     # npm end
+     # -------------------------
 
      # ------------------------
      # cp client.js
@@ -90,27 +122,4 @@
       vars:
         packages:
          - nodejs
-
-     # ------------------------
-     # npm begin
-     # -------------------------
-    - name: make dir for npm
-      become: true
-      file:
-        path: "/home/docker/.npm"
-        state: directory
-        owner: docker
-        group: docker
-        mode: '0755'
-
-    - name: npm install socket.io-client
-      npm:
-        name: socket.io-client
-        version: 4.1.2
-        state: present
-        path: /var/client_file
-
-     # ------------------------
-     # npm end
-     # -------------------------
 
