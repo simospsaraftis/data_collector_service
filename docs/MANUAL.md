@@ -743,21 +743,33 @@ ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --ask-pass --ask-
 Το nodejs αρχείο που περιέχει τον κώδικα για τον εξυπηρετητή έχει όνομα app.js και είναι το ακόλουθο:
 
 ```
-var express = require('express');
-var http = require('http');
-var app = express();
-//const cors = require('cors');
-const helmet = require('helmet');
+var express = require('express');		//Module gia to web application framework
+var app = express();		//Dimiourgia enos express application
+
+
+const helmet = require('helmet');		//To module helmet parexei asfaleia sto express.js meso HTTP header
 app.use(helmet());
-app.use(express.json());
 
-//I porta stin opoia tha akouei o server
-var serverPort = "8085";
 
-var server = http.createServer(app);
-const io = require("socket.io")(server);
-require('dotenv').config();
-var MongoClient = require('mongodb').MongoClient;
+app.use(express.json());		//Xeirizetai ta requests os JSON
+
+
+var http = require('http');		//Module gia ti dimiourgia tou server
+var serverPort = "8085";		//Porta stin opoia tha akouei o server
+var server = http.createServer(app);		//Dimiourgia tou server
+
+
+const io = require("socket.io")(server);		//Module pou parexei to Socket.IO
+
+
+require('dotenv').config();		//Module gia ti fortosi ton environment variables
+
+
+var MongoClient = require('mongodb').MongoClient;		//Klasi syndesis me ti MongoDB
+
+
+
+//const cors = require('cors');
 
 /*
 var allowedOrigins = [ 
@@ -774,16 +786,15 @@ const io = require("socket.io")(server, {
 });
 */
 
-//----------------------------------------
+
+
 //O server akouei gia tyxon syndeseis client se ayton, sto port pou vrisketai sti metavliti serverPort
 server.listen(serverPort, () => {
 		console.log("HTTP server listening on port %s", serverPort);
 });
 
-//-----------------------------------------
 
 
-//--------------------------------------------
 //Otan kapoios client pragmatopoiisei sindesi ston server, emfanizetai katallilo minima
 //Antistoixo minima emfanizetai kai otan o client aposyndethei
 io.on('connection', (socket) => {
@@ -798,15 +809,14 @@ const transmit = change => {
 		io.emit('change_msg',change);
 }
 
-//-------------------------------------------
 
 
-//------------------------------------------------
-//Block kodika meso tou opoiou o server pragmatopoiei syndesi me ti vasi kai anoigei ena ChangeStram gias na akouei tyxon
-//alages pou symvainoun sti vasi kai na tis stelnei stous ypoloipous komvous tou sminous
+//Block kodika meso tou opoiou o server pragmatopoiei syndesi me ti vasi kai anoigei ena ChangeStram gia na akouei tyxon
+//allages pou symvainoun sti vasi kai na tis stelnei stous ypoloipous komvous tou sminous
 //Ta stoixeia syndesis sti vasi einai apothikeymena mesa se environment variables
 //Se periptosi pou gia kapoio logo den einai epityxis i sndesi me ti vasi otan pragmatopoieitai syndesi gia proti fora,
-//o server epixeirei na syndethei xana me ti vasi ana 5 deyterolepta
+//o server epixeirei na syndethei xana me ti vasi kathe 5 deyterolepta
+
 var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
 var connectWithRetry = function() {
@@ -847,33 +857,35 @@ var connectWithRetry = function() {
 };
 connectWithRetry();
 
-//----------------------------------------------------------------------------------------------
-
 ```
 
 Το nodejs που περιέχει τον κώδικα για τον πελάτη έχει όνομα client.js και είναι το ακόλουθο:
 
 ```
-//Socket.IO vivliothiki gia ton client
-const io = require("socket.io-client");
+const io = require("socket.io-client");		//Socket.IO module gia ton client
+
+
 
 //Orizoume to URL gia ti syndesi me ton master
-//Exoume dosei onomata ston master kai stous workers
-//outos oste na mporoume na anaferomaste se aytous
+//Exoume dosei onomata ston master kai stous workers outos oste na mporoume na anaferomaste se aytous
 //xoris na xrisimopoioume tis IP dieythinseis tous
 const URL = "http://hybrid-linux_master_1:8085";
 
-//Entoli pou anoigei mia syndesi me ton master (server), sto port 8085
-const socket = io.connect(URL, {reconnect:true});
 
-//Otan o client syndethei me ton server, emfanizetai katallilo minima
-socket.on('connect', (socket) => {
+
+const socket = io.connect(URL, {reconnect:true});		//Anoigei mia syndesi me ton master (server), sto port 8085
+
+
+
+socket.on('connect', (socket) => {		//Otan o client syndethei me ton server, emfanizetai katallilo minima
 		console.log("Client connected");
 });
 
-//O client akouei gia minimata apo ton server kai otan o server steilei minima 
+
+
+//O client akouei gia tyxon minimata apo ton server kai otan o server steilei minima 
 //ston client sxetika me kapoia alagi pou exei ginei sti vasi dedomenon, 
-//o client to lamvanei kai to emfanizei stin othoni
+//o client to lamvanei kai to emfanizei sto terminal
 socket.on('change_msg', (msg) => {
 		console.log(msg);
 });
