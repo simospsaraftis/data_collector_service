@@ -55,7 +55,6 @@ server.listen(serverPort, () => {
 //Antistoixo minima emfanizetai kai otan o client aposyndethei
 io.on('connection', (socket) => {
 		console.log("Client connected");
-		console.log(socket.handshake.address);
 		socket.on('disconnect',() => {
 				console.log("Client disconnected");
 		});
