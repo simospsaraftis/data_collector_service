@@ -35,4 +35,4 @@ ___
 
 Η αρχιτεκτονική του εικονικού εργαστηρίου που σκοπεύουμε να υλοποιήσουμε, φαίνεται στην ακόλουθη εικόνα:
 
-<img src="vlab_final.png" alt="drawing" width="800" height="600"/>
+<img src="vlab_final.png" alt="drawing" width="800"/>
