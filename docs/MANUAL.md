@@ -183,7 +183,7 @@ docker container ls
 
 Το MongoDB replica set που μόλις δημιουργήσαμε φαίνεται στο ακόλουθο διάγραμμα:
 
-![Replica Set](./images/replica_set.png)
+![Replica Set](./images/mongo_replica_set.png)
 
 ### 2.5 Κατανόηση της διαδικασίας δημιουργίας της βάσης δεδομένων
 
