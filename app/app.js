@@ -25,7 +25,7 @@ var MongoClient = require('mongodb').MongoClient;		//Klasi syndesis me ti MongoD
 //origin pera apo to diko tou tha epitrepei prosvasi stous porous tou
 const cors = require('cors');
 
-//Anaferoume oti tha epitrepetai i prosvasi se olo to diktyo
+//Anaferoume oti tha epitrepetai i prosvasi se olo to diktyo meso tou port 8085
 //kai tha apagoreyetai i prosvasi se osous aitountai prosvasi
 //alla vriskontai ektos tou diktiou
 var allowedOrigins = [ 
