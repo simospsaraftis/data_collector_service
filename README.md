@@ -35,4 +35,4 @@ ___
 
 Η αρχιτεκτονική του εικονικού εργαστηρίου που σκοπεύουμε να υλοποιήσουμε, φαίνεται στην ακόλουθη εικόνα:
 
-![Swarm Final](./docs/images/swarm_final.png)
+![Swarm Final](./docs/images/vlab_final.png)
