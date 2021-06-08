@@ -14,9 +14,6 @@ var serverPort = "8085";		//Porta stin opoia tha akouei o server
 var server = http.createServer(app);		//Dimiourgia tou server
 
 
-const io = require("socket.io")(server);		//Module pou parexei to Socket.IO
-
-
 require('dotenv').config();		//Module gia ti fortosi ton environment variables
 
 
@@ -24,22 +21,26 @@ var MongoClient = require('mongodb').MongoClient;		//Klasi syndesis me ti MongoD
 
 
 
-//const cors = require('cors');
+//Module pou parexei enan mixanismo meso tou opoiou o server orizei apo poio allo
+//origin pera apo to diko tou tha epitrepei prosvasi stous porous tou
+const cors = require('cors');
 
-/*
+//Anaferoume oti tha epitrepetai i prosvasi se olo to diktyo
+//kai tha apagoreyetai i prosvasi se osous aitountai prosvasi
+//alla vriskontai ektos tou diktiou
 var allowedOrigins = [ 
-      "http://hybrid-linux_worker_*:8085"
+      "http://0.0.0.0:8085"
       ];
-*/
 
-/*
+
+//Module pou parexei to Socket.IO
 const io = require("socket.io")(server, {
    cors: {
          origin: allowedOrigins,
          methods: ["GET", "POST"]
    }
 });
-*/
+
 
 
 
@@ -54,6 +55,7 @@ server.listen(serverPort, () => {
 //Antistoixo minima emfanizetai kai otan o client aposyndethei
 io.on('connection', (socket) => {
 		console.log("Client connected");
+		console.log(socket.handshake.address);
 		socket.on('disconnect',() => {
 				console.log("Client disconnected");
 		});
