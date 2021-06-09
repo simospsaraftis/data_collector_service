@@ -36,7 +36,7 @@ ___
 
 Για την υποστήριξη 'χώρου αποθήκευσης', θα αξιοποιηθεί η υπηρεσία [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που επίσης παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
 
-Για την εγκατάσταση των υπηρεσιών στα containers, θα αξιοποιηθεί το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git).
+Για την εγκατάσταση των υπηρεσιών στα containers, θα αξιοποιηθεί το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git).<br/><br/>
 
 
 ### 3. Διάγραμμα αρχιτεκτονικής εικονικού εργαστηρίου
