@@ -12,12 +12,12 @@ ___
 
 Για την υποστήριξη 'χώρου αποθήκευσης', θα αξιοποιηθεί η υπηρεσία [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που επίσης παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
 
-Για την εγκατάσταση των υπηρεσιών στα containers, θα αξιοποιηθεί το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git).
+Για την εγκατάσταση των υπηρεσιών στα containers, θα αξιοποιηθεί το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git).<br/><br/>
 
 ### 1. Προαπαιτούμενα
 
 Για να αποκτήσουμε πρόσβαση στο περιβάλλον [swarmlab.io](http://docs.swarmlab.io/) και να εγκαταστήσουμε το εικονικό εργαστήριο [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux), θα πρέπει αρχικά να εγκαταστήσουμε την υπηρεσία swarmlab-hybrid και στη συνέχεια να δημιουργήσουμε λογαριασμό στο περιβάλλον.<br/>
-Περισσότερες πληροφορίες για την εγκατάσταση της υπηρεσίας swarmlab-hybrid, μπορείτε να βρείτε [εδώ](https://git.swarmlab.io:3000/zeus/swarmlab-hybrid).
+Περισσότερες πληροφορίες για την εγκατάσταση της υπηρεσίας swarmlab-hybrid, μπορείτε να βρείτε [εδώ](https://git.swarmlab.io:3000/zeus/swarmlab-hybrid).<br/><br/>
 
 ### 2. Δημιουργία του σμήνους (swarm)
 
@@ -40,7 +40,7 @@ docker container ls
 
 Το σμήνος που μόλις δημιουργήσαμε φαίνεται στο παρακάτω διάγραμμα:
 
-![Vlab_Swarm](./images/vlab_swarm.png)
+![Vlab_Swarm](./images/vlab_swarm.png)<br/><br/>
 
 ### 3. Κατανόηση της διαδικασίας δημιουργίας του σμήνους (swarm)
 
