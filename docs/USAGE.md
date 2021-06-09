@@ -102,6 +102,7 @@ echo "cloud_computing" >> /var/log-in/files/file_1
 
 Ελέγχουμε τα τερματικά του server και των client και παρατηρούμε ότι υπάρχει η ακόλουθη εγγραφή:
 <br/><br/>
+
 ![Τερματικό master](./images/picture8.png)
 
 <br/><br/>
