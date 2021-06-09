@@ -91,9 +91,12 @@ touch /var/log-in/files/file_1
 echo "cloud_computing" >> /var/log-in/files/file_1
 ```
 <br/><br/>
+
 Μετά από λίγο, ελέγχουμε τη βάση δεδομένων, και συγκεκριμένα το περιεχόμενο του collection με όνομα "logs", και παρατηρούμε ότι υπάρχει η ακόλουθη εγγραφή:
+
 <br/><br/>
 ![Περιεχόμενο βάσης](./images/picture7.png)
+
 <br/><br/>
 Αυτό σημαίνει ότι το συμβάν εντοπίστηκε από το [fluentd](https://www.fluentd.org/) και στάλθηκε επιτυχώς στη βάση δεδομένων.
 
