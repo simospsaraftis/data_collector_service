@@ -812,10 +812,10 @@ ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --ask-pass --ask-
 
 ### 8. Εγκατάσταση της εφαρμογής για τη μεταφορά των δεδομένων από τη βάση δεδομένων στους κόμβους του σμήνους μέσω websocket<br/>
 
-Σε αυτή τη παράγραφο, θα στήσουμε πάνω στον master, μία υπηρεσία πελάτη-εξυπηρετητή, κάνοντας χρήση του [node.js](https://nodejs.org/en/) και του [Socket.IO](https://socket.io/). Σε αυτή την υπηρεσία, ο master θα αποτελεί τον εξυπηρετητή και οι workers τους πελάτες, οι οποίοι μέσω του [Socket.IO](https://socket.io/), θα συνδέονται με τον εξυπηρετητή. Ο εξυπηρετητής θα ακούει για τυχόν προσθήκες δεδομένων/συμβάντων στη βάση δεδομένων μέσω ενός ChangeStream και θα στέλνει τα δεδομένα αυτά στους πελάτες.<br/>
+Σε αυτή τη παράγραφο, θα στήσουμε πάνω στον master, μία υπηρεσία client-server, κάνοντας χρήση του [node.js](https://nodejs.org/en/) και του [Socket.IO](https://socket.io/). Σε αυτή την υπηρεσία, ο master θα αποτελεί τον server και οι workers τους clients, οι οποίοι μέσω του [Socket.IO](https://socket.io/), θα συνδέονται με τον server. Ο server θα ακούει για τυχόν προσθήκες δεδομένων/συμβάντων στη βάση δεδομένων μέσω ενός ChangeStream και θα στέλνει τα δεδομένα αυτά στους clients.<br/>
 Τα αρχεία για την εγκατάσταση της υπηρεσίας, βρίσκονται μέσα στον κατάλογο /data_collector_service/app.
 
-Το [node.js](https://nodejs.org/en/) αρχείο που περιέχει τον κώδικα για τον εξυπηρετητή έχει όνομα app.js και είναι το ακόλουθο:
+Το [node.js](https://nodejs.org/en/) αρχείο που περιέχει τον κώδικα για τον server έχει όνομα app.js και είναι το ακόλουθο:
 <br/><br/>
 ```
 var express = require('express');		//Module gia to web application framework
@@ -936,7 +936,7 @@ connectWithRetry();
 
 ```
 <br/><br/>
-Το [node.js](https://nodejs.org/en/) αρχείο που περιέχει τον κώδικα για τον πελάτη έχει όνομα client.js και είναι το ακόλουθο:
+Το [node.js](https://nodejs.org/en/) αρχείο που περιέχει τον κώδικα για τον client έχει όνομα client.js και είναι το ακόλουθο:
 <br/><br/>
 ```
 const io = require("socket.io-client");		//Socket.IO module gia ton client
@@ -1187,7 +1187,7 @@ ansible-playbook -u docker -i /data_collector_service/app/inventory.yml nodejs.y
 
 ```
 <br/><br/>
-Τώρα που έχουμε μελετήσει τα αρχεία, εκτελούμε το αρχείο nodejs.yml.sh για την εκγατάσταση του [node.js](https://nodejs.org/en/) και των πακέτων που χρειάζονται, μέσω της ακόλουθης εντολής, όπου στα σημεία που ζητείται password, πληκτρολογούμε το password του συστήματος:
+Τώρα που έχουμε μελετήσει τα αρχεία, εκτελούμε το αρχείο nodejs.yml.sh για την εκγατάσταση του [node.js](https://nodejs.org/en/) και των πακέτων που χρειάζονται στους workers, μέσω της ακόλουθης εντολής, όπου στα σημεία που ζητείται password, πληκτρολογούμε το password του συστήματος:
 <br/><br/>
 ```
 ./nodejs.yml.sh
