@@ -996,6 +996,21 @@ curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh \
 sudo ./app.js.sh
 ```
 <br/><br/>
+Τα πακέτα που εγκαταστήσαμε και οι εξαρτήσεις τους βρίσκονται στο ακόλουθο json αρχείο με όνομα package.json:
+<br/><br/>
+```
+    {
+      "dependencies": {
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "helmet": "^4.6.0",
+        "mongodb": "^3.6.9",
+        "socket.io": "^4.1.2",
+        "socket.io-client": "^4.1.2"
+      }
+    }
+```
+<br/><br/>
 Έχουμε εγκαταστήσει το [node.js](https://nodejs.org/en/) και τα απαραίτητα πακέτα για την εκτέλεση του server στον master. Τώρα, θα πρέπει να εγκαταστήσουμε το [node.js](https://nodejs.org/en/) και στους workers, οι οποίοι θα αποτελέσουν τους clients. Για να το επιτύχουμε αυτό, θα χρησιμοποιήσουμε το [ansible](https://www.ansible.com/).<br/>
 Για την εγκατάσταση, θα χρησιμοποιήσουμε ένα αρχείο γραμμένο σε yaml με όνομα nodejs.yml, το οποίο περιλαμβάνει όλες εκείνες τι εντολές και εγκαταστάσεις που θέλουμε να πραγματοποιήσουμε απομακρυσμένα στους κόμβους του συστήματος μέσω του [ansible](https://www.ansible.com/):
 <br/><br/>
