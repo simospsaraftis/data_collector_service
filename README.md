@@ -36,4 +36,4 @@ ___
 
 Η αρχιτεκτονική του εικονικού εργαστηρίου που σκοπεύουμε να υλοποιήσουμε, φαίνεται στο ακόλουθο διάγραμμα:
 
-![Vlab Final](./docs/images/vlab_final.png)
+![Vlab Final](./docs/images/vlab_diagram.png)
