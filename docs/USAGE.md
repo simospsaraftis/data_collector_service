@@ -17,7 +17,7 @@ docker exec -it -udocker hybrid-linux_master_1 /bin/bash
 ```
 
 
-Στη συνέχεια, μεταβαίνουμε στον κατάλογο /data_collector_service/app/ και ενεργοποιούμε τον server, εκτελώντας την ακόλουθη εντολή στο τερματικό του hybrid-linux_master_1:
+Στη συνέχεια, μεταβαίνουμε στον κατάλογο /data_collector_service/app/ και ενεργοποιούμε τον εξυπηρετητή (server), εκτελώντας την ακόλουθη εντολή στο τερματικό του hybrid-linux_master_1:
 
 
 ```
