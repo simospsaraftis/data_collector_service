@@ -145,6 +145,7 @@ up_master ()
 ```
 <br/><br/>
 και στη συνάρτηση up_workers() η οποία ορίζει το πλήθος των workers και τους δημιουργεί πραγματοποιώντας scaling της υπηρεσιας:
+<br/><br/>
 
 ```
 #Synartisi orismou tou plithous ton workers kai dimiourgias tous
@@ -181,7 +182,6 @@ up_workers ()
 
 Εκτελώντας την ακόλουθη εντολή, μπορούμε να δούμε τα containers που έχουν δημιουργηθεί στο [docker](https://www.docker.com/):<br/><br/>
 
-
 ```
 docker container ls
 ```
@@ -206,9 +206,15 @@ docker container ls
 ```
 version: '3.8'
 
+
 services: 
 
-    # setup MongoDB cluster for production
+    #Orizontai to replica_set
+    #To replica_set tha xrisimopoiei to image mongo:4.2
+    #Se periptosi apotixias tha yparxei i dynatotita restart
+    #To replica_set tha anikei sto diktyo netSwarmlabMongo
+    #Gia tin egatastasi tha xrisimopoihthei to bash arxeio mongosetup.sh
+    #Orizontai oi default rythmiseis (username kai password) tou replica_set meso environment variables
     mongo-replica-setup:
         container_name: mongo-setup
         image: 'mongo:4.2'
@@ -229,6 +235,15 @@ services:
             - swarmlabmongo2
             - swarmlabmongo3
 
+    #Orizontai to container swarmlabmongo1
+    #Orizetai to hostname kai to container name na einai swarmlabmongo1
+    #Orizetai oti tha xrisimopoiei to image mongo:4.2
+    #Se periptosi apotixias tha yparxei i dynatotita restart
+    #Orizetai oti to container tha akouei sti porta 27017
+    #Orizetai i antistoixisi tis portas tou container sti porta tou docker host
+    #To replica tha anikei sto diktyo newSwarmlabMongo
+    #Tha elegxetai ean i vasi einai ok kathe 30 deyterolepta
+    #Orizontai oi default rythmiseis (username kai password) tis vasis meso environment variables
     swarmlabmongo1:
         hostname: 'swarmlabmongo1'
         container_name: 'swarmlabmongo1'
@@ -258,6 +273,17 @@ services:
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
             MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
 
+
+    #Orizontai to container swarmlabmongo2
+    #Orizetai to hostname kai to container name na einai swarmlabmongo2
+    #Orizetai oti tha xrisimopoiei to image mongo:4.2
+    #Se periptosi apotixias tha yparxei i dynatotita restart
+    #Orizetai oti to container tha akouei sti porta 27017
+    #Orizetai i antistoixisi tis portas tou container sti porta tou docker host
+    #To replica tha anikei sto diktyo newSwarmlabMongo
+    #Tha elegxetai ean i vasi einai ok kathe 30 deyterolepta
+    #Orizontai oi default rythmiseis (username, password kai onoma) tis vasis meso environment variables
+    #To depends_on: - swarmlabmongo1 deixnei poia replica einai to primary
     swarmlabmongo2:
         hostname: 'swarmlabmongo2'
         container_name: 'swarmlabmongo2'
@@ -284,6 +310,17 @@ services:
         depends_on: 
             - swarmlabmongo1
 
+
+    #Orizontai to container swarmlabmongo3
+    #Orizetai to hostname kai to container name na einai swarmlabmongo3
+    #Orizetai oti tha xrisimopoiei to image mongo:4.2
+    #Se periptosi apotixias tha yparxei i dynatotita restart
+    #Orizetai oti to container tha akouei sti porta 27017
+    #Orizetai i antistoixisi tis portas tou container sti porta tou docker host
+    #To replica tha anikei sto diktyo newSwarmlabMongo
+    #Tha elegxetai ean i vasi einai ok kathe 30 deyterolepta
+    #Orizontai oi default rythmiseis (username, password kai onoma) tis vasis meso environment variables
+    #To depends_on: - swarmlabmongo1 deixnei poia replica einai to primary
     swarmlabmongo3:
         hostname: 'swarmlabmongo3'
         container_name: 'swarmlabmongo3'
@@ -317,26 +354,31 @@ volumes:
     swarmlabmongoLog1:
     swarmlabmongoLog2:
     swarmlabmongoLog3:
+
+networks: 
+    netSwarmlabMongo:
 ```
+<br/><br/>
 
-
-Για τη δημιουργία και διάθεση των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο bash αρχείο με όνομα run.sh:
+Για τη δημιουργία και το deploy των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο bash αρχείο με όνομα run.sh:<br/><br/>
 
 
 ```
 #!/bin/sh
 
+#To sygekrimeno bash arxeio dimiourgei kai kanei deploy ta containers
+#swarmlabmongo1, swarmlabmongo2 kai swarmlabmongo3
 docker-compose down
 docker-compose rm
 docker container rm swarmlabmongo1 swarmlabmongo2 swarmlabmongo3
 docker-compose up -d
 ```
-
-Οι default ρυθμίσεις των τριών MongoDB instances, βρίσκονται στο ακόλουθο bash αρχείο με όνομα connect.mongo.sh:
-
+<br/><br/>
+Οι default ρυθμίσεις των τριών [MongoDB](https://www.mongodb.com/) instances, βρίσκονται στο ακόλουθο bash αρχείο με όνομα connect.mongo.sh:
+<br/><br/>
 
 ```
-
+#Default rythmiseis ton trion MongoDB instances
 MONGO_INITDB_ROOT_USERNAME=swarmlab
 MONGO_INITDB_ROOT_PASSWORD=swarmlab
 MONGO_INITDB_DATABASE=app_swarmlab
@@ -346,57 +388,51 @@ MONGO_REPLICA_SET_NAME=rs0
 
 mongo "mongodb://localhost:30001,localhost:30002,localhost:30003/$MONGO_INITDB_DATABASE" -u $MONGO_INITDB_USERNAME
 mongo "mongodb://localhost:30001,localhost:30002,localhost:30003/app_swarmlab" -u app_swarmlab
+
 ```
+<br/><br/>
 
-
-### 6. Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων
+### 6. Σύνδεση των κόμβων του σμήνους με το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων<br/>
 
 Για λόγους καλύτερης διαχείρισης, έχουμε ορίσει η υπηρεσία της βάσης δεδομένων, να βρίσκεται σε διαφορετικό δίκτυο από τους κόμβους του σμήνους.<br/>
-Επομένως, για να μπορούν να μεταφέρονται και να αποθηκεύονται στη βάση δεδομένων τα συμβάντα που συμβαίνουν στους κόμβους του σμήνους, και συλλέγονται μέσω του [fluentd](https://www.fluentd.org/), θα πρέπει οι κόμβοι του σμήνους να είναι συνδεδεμένοι και με το δίκτυο της βάσης δεδομένων.<br/>
+Επομένως, για να μπορούν να μεταφέρονται και να αποθηκεύονται στη βάση δεδομένων τα συμβάντα που συμβαίνουν στους κόμβους του σμήνους, και συλλέγονται μέσω του [fluentd](https://www.fluentd.org/), θα πρέπει οι κόμβοι του σμήνους να είναι συνδεδεμένοι και με το δίκτυο της βάσης δεδομένων.
 
 Για να πραγματοποιήσουμε αυτή τη σύνδεση, θα χρησιμοποιήσουμε το interface του [swarmlab.io](http://docs.swarmlab.io/).<br/>
-Αρχικά, μεταβαίνουμε στην καρτέλα Instances -> Container και επιλέγουμε το container hybrid_linux_master_1, το οποίο αντιστοιχεί στον master του σμήνους. Στη συνέχεια, επιλέγουμε το δίκτυο storage-mongo-replica_netSwarmlabMongo, το οποίο αποτελεί το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων, και πατάμε το κουμπί "Update", όπως φαίνεται στην παρακάτω εικόνα:
+Αρχικά, μεταβαίνουμε στην καρτέλα Instances -> Container και επιλέγουμε το container hybrid_linux_master_1, το οποίο αντιστοιχεί στον master του σμήνους. Στη συνέχεια, επιλέγουμε το δίκτυο storage-mongo-replica_netSwarmlabMongo, το οποίο αποτελεί το δίκτυο στο οποίο βρίσκεται η βάση δεδομένων, και πατάμε το κουμπί "Update", όπως φαίνεται στην παρακάτω εικόνα:<br/><br/>
 
 
-![Επιλογή δικτύου](./images/picture6.png)
+![Επιλογή δικτύου](./images/picture6.png)<br/><br/>
 
 
-Πραγματοποιούμε την ίδια διαδικασία και για τους δύο workers (hybrid-linux_worker_1 και hybrid-linux_worker_2), ούτως ώστε να συνδέονται και αυτοί με το δίκτυο της βάσης δεδομένων.
-Πλέον θα μπορούν να μεταφέρονται και να αποθηκεύονται στη βάση δεδομένων τα συμβάντα που συμβαίνουν στους κόμβους του σμήνους, και συλλέγονται μέσω του [fluentd](https://www.fluentd.org/).
+Πραγματοποιούμε την ίδια διαδικασία και για τους δύο workers (hybrid-linux_worker_1 και hybrid-linux_worker_2), ούτως ώστε να συνδέονται και αυτοί με το δίκτυο της βάσης δεδομένων.<br/>
+Πλέον θα μπορούν να μεταφέρονται και να αποθηκεύονται στη βάση δεδομένων τα συμβάντα που συμβαίνουν στους κόμβους του σμήνους, και συλλέγονται μέσω του [fluentd](https://www.fluentd.org/).<br/><br/>
 
 
-### 7. Εγκατάσταση της υπηρεσίας για τη συλλογή συμβάντων που συμβαίνουν στους κόμβους του σμήνους
+### 7. Εγκατάσταση της υπηρεσίας για τη συλλογή συμβάντων που συμβαίνουν στους κόμβους του σμήνους<br/>
 
 
-Εισερχόμαστε στον κόμβο hybrid-linux_master_1, δηλαδή στον κόμβο που αποτελεί τον master, εκτελώντας την ακόλουθη εντολή στο τερματικό:
-
-
+Εισερχόμαστε στον κόμβο hybrid-linux_master_1, δηλαδή στον κόμβο που αποτελεί τον master, εκτελώντας την ακόλουθη εντολή στο τερματικό:<br/><br/>
 ```
 docker exec -it -udocker hybrid-linux_master_1 /bin/bash
 ```
-
-
+<br/><br/>
 Έπειτα, κατεβάζουμε το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git) και εισερχόμαστε σε αυτό, μέσω των ακόλουθων εντολών:
-
-
+<br/><br/>
 ```
 sudo git clone https://git.swarmlab.io:3000/Simosps/data_collector_service.git
 cd data_collector_service
 ```
-
-
+<br/><br/>
 Στη συνέχεια εκτελούμε την ακόλουθη εντολή, ούτως ώστε να δούμε τα υπόλοιπα μέλη του σμήνους:
-
-
+<br/><br/>
 ```
 ./bin/swarmlab-nmap
 ```
-
+<br/><br/>
 και λαμβάνουμε ως αποτέλεσμα τις IP διευθύνσεις των δύο worker.
 
 Το αρχείο μέσω του οποίου πραγματοποιείται αυτή η λειτουργία είναι το ακόλουθο bash αρχείο με όνομα swarmlab-nmap που βρίσκεται στον κατάλογο data_collector_service/bin:
-
-
+<br/><br/>
 ```
 #/bin/sh
 
@@ -407,13 +443,11 @@ ip=`nslookup $NODENAME | grep Addr | cut -d':' -f2 | grep -v 127.0.`
 nmap -sn -oG - $ip/24 | grep Up | grep $NODENETWORK | cut -d ' ' -f 2
 
 ```
-
-
+<br/><br/>
 Τώρα, θα πραγματοποιήσουμε την εγκατάσταση της υπηρεσίας [fluentd](https://www.fluentd.org/) στους κόμβους του σμήνους, ούτως ώστε να συλλέγονται τα συμβάντα που συμβαίνουν σε αυτούς και να αποθηκεύονται στη βάση δεδομένων.<br/>
 Μεταφερόμαστε στον κατάλογο fluentd που περιέχει τα αρχεία για την εγκατάσταση της υπηρεσίας [fluentd](https://www.fluentd.org/).<br/>
 Στον κατάλογο conf βρίσκεται το αρχείο fluent.conf το οποίο περιέχει ρυθμίσεις σχετικά με το πως θέλουμε να λειτουργήσει το [fluentd](https://www.fluentd.org/):
-
-
+<br/><br/>
 ```
 #
 config
@@ -548,11 +582,9 @@ config
 </match>
 
 ```
-
-
+<br/><br/>
 Επίσης, διαθέτουμε ένα αρχείο γραμμένο σε yaml με όνομα fluentd.yml, το οποίο περιλαμβάνει όλες εκείνες τι εντολές και εγκαταστάσεις που θέλουμε να πραγματοποιήσουμε απομακρυσμένα στους κόμβους του συστήματος μέσω του [ansible](https://www.ansible.com/):
-
-
+<br/><br/>
 ```
 ---
 - hosts: service
@@ -712,11 +744,9 @@ config
       shell: nohup /home/docker/.gem/ruby/2.5.0/bin/fluentd -c /fluentd/etc/fluent.conf -vv </dev/null >/dev/null 2>&1 &
 
 ```
-
-
+<br/><br/>
 Για να εγκαταστήσουμε και να τρέξουμε το [ansible](https://www.ansible.com/), το οποίο θα εγκαταστήσει την υπηρεσία [fluentd](https://www.fluentd.org/) σε όλους τους κόμβους του σμήνους, έχουμε δημιουργήσει το ακόλουθο bash αρχείο με όνομα fluentd.yml.sh: 
-
-
+<br/><br/>
 ```
 !/bin/sh
 
@@ -768,29 +798,25 @@ ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --ask-pass --ask-
 
 
 ```
-
-
+<br/><br/>
 Τώρα που έχουμε μελετήσει τα αρχεία, εκτελούμε το αρχείο fluentd.yml.sh μέσω της ακόλουθης εντολής, όπου στα σημεία που ζητείται password, πληκτρολογούμε το password του συστήματος:
-
-
+<br/><br/>
 ```
 ./fluentd.yml.sh
 ```
-
-
+<br/><br/>
 Εάν δεν υπάρχουν κόκκινα μηνύματα σφάλματος, η υπηρεσία [fluentd](https://www.fluentd.org/) έχει εγκατασταθεί επιτυχώς.
 
-Στη συγκεκριμένη παράγραφο, καταφέραμε να εγκαταστήσουμε την υπηρεσία [fluentd](https://www.fluentd.org/), για τη συλλογή συμβάντων που συμβαίνουν στους κόμβους του σμήνους και την αποθήκευσή τους στη βάση δεδομένων. Μένει να εγκαταστήσουμε την εφαρμογή για τη μεταφορά των δεδομένων από τη βάση δεδομένων στους κόμβους του σμήνους.
+Στη συγκεκριμένη παράγραφο, καταφέραμε να εγκαταστήσουμε την υπηρεσία [fluentd](https://www.fluentd.org/), για τη συλλογή συμβάντων που συμβαίνουν στους κόμβους του σμήνους και την αποθήκευσή τους στη βάση δεδομένων. Μένει να εγκαταστήσουμε την εφαρμογή για τη μεταφορά των δεδομένων από τη βάση δεδομένων στους κόμβους του σμήνους.<br/><br/>
 
 
-### 8. Εγκατάσταση της εφαρμογής για τη μεταφορά των δεδομένων από τη βάση δεδομένων στους κόμβους του σμήνους μέσω websocket
+### 8. Εγκατάσταση της εφαρμογής για τη μεταφορά των δεδομένων από τη βάση δεδομένων στους κόμβους του σμήνους μέσω websocket<br/>
 
 Σε αυτή τη παράγραφο, θα στήσουμε πάνω στον master, μία υπηρεσία πελάτη-εξυπηρετητή, κάνοντας χρήση του [node.js](https://nodejs.org/en/) και του [socket.IO](https://socket.io/). Σε αυτή την υπηρεσία, ο master θα αποτελεί τον εξυπηρετητή και οι workers τους πελάτες, οι οποίοι μέσω του [socket.IO](https://socket.io/), θα συνδέονται με τον εξυπηρετητή. Ο εξυπηρετητής θα ακούει για τυχόν προσθήκες δεδομένων/συμβάντων στη βάση δεδομένων μέσω ενός ChangeStream και θα στέλνει τα δεδομένα αυτά στους πελάτες.<br/>
 Τα αρχεία για την εγκατάσταση της υπηρεσίας, βρίσκονται μέσα στον κατάλογο /data_collector_service/app.
 
 Το [node.js](https://nodejs.org/en/) αρχείο που περιέχει τον κώδικα για τον εξυπηρετητή έχει όνομα app.js και είναι το ακόλουθο:
-
-
+<br/><br/>
 ```
 var express = require('express');		//Module gia to web application framework
 var app = express();		//Dimiourgia enos express application
@@ -909,11 +935,9 @@ var connectWithRetry = function() {
 connectWithRetry();
 
 ```
-
-
+<br/><br/>
 Το [node.js](https://nodejs.org/en/) αρχείο που περιέχει τον κώδικα για τον πελάτη έχει όνομα client.js και είναι το ακόλουθο:
-
-
+<br/><br/>
 ```
 const io = require("socket.io-client");		//Socket.IO module gia ton client
 
@@ -965,20 +989,16 @@ curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh \
 && npm install dotenv
 
 ```
-
-
+<br/><br/>
 Εκτελούμε το bash αρχείο για την εγκατάσταση του [node.js](https://nodejs.org/en/) και των πακέτων, μέσω της ακόλουθης εντολής:
-
-
+<br/><br/>
 ```
 sudo ./app.js.sh
 ```
-
-
+<br/><br/>
 Έχουμε εγκαταστήσει το [node.js](https://nodejs.org/en/) και τα απαραίτητα πακέτα για την εκτέλεση του server στον master. Τώρα, θα πρέπει να εγκαταστήσουμε το [node.js](https://nodejs.org/en/) και στους workers, οι οποίοι θα αποτελέσουν τους clients. Για να το επιτύχουμε αυτό, θα χρησιμοποιήσουμε το [ansible](https://www.ansible.com/).<br/>
 Για την εγκατάσταση, θα χρησιμοποιήσουμε ένα αρχείο γραμμένο σε yaml με όνομα nodejs.yml, το οποίο περιλαμβάνει όλες εκείνες τι εντολές και εγκαταστάσεις που θέλουμε να πραγματοποιήσουμε απομακρυσμένα στους κόμβους του συστήματος μέσω του [ansible](https://www.ansible.com/):
-
-
+<br/><br/>
 ```
 ---
 - hosts: service
@@ -1100,11 +1120,9 @@ sudo ./app.js.sh
 
 
 ```
-
-
+<br/><br/>
 Για να εγκαταστήσουμε και να τρέξουμε το [ansible](https://www.ansible.com/), το οποίο θα εγκαταστήσει την υπηρεσία [node.js](https://nodejs.org/en/) σε όλους τους κόμβους του σμήνους, έχουμε δημιουργήσει το ακόλουθο bash αρχείο με όνομα nodejs.yml.sh:
-
-
+<br/><br/>
 ```
 #!/bin/sh
 
@@ -1152,19 +1170,16 @@ echo "[service]" > /data_collector_service/app/inventory.yml
 # Orizoume to ansible na anoigei 5 syndeseis taytoxrona
 ansible-playbook -u docker -i /data_collector_service/app/inventory.yml nodejs.yml  -f 5  --ask-pass --ask-become-pass
 
-
 ```
-
+<br/><br/>
 Τώρα που έχουμε μελετήσει τα αρχεία, εκτελούμε το αρχείο nodejs.yml.sh για την εκγατάσταση του [node.js](https://nodejs.org/en/) και των πακέτων που χρειάζονται, μέσω της ακόλουθης εντολής, όπου στα σημεία που ζητείται password, πληκτρολογούμε το password του συστήματος:
-
-
+<br/><br/>
 ```
 ./nodejs.yml.sh
 ```
-
-
+<br/><br/>
 Εάν δεν υπάρχουν κόκκινα μηνύματα σφάλματος, η υπηρεσία έχει εγκατασταθεί επιτυχώς.
-
+<br/><br/>
 
 Με την εκτέλεση των συγκεκριμένων εντολών, έχουμε ολοκληρώσει την εγκατάσταση των απαραίτητων εργαλείων και υπηρεσιών, ούτως ώστε να μπορεί ο master, μέσω websocket να στέλνει στους workers, τα δεδομένα/συμβάντα που εισάγονται στη βάση δεδομένων.<br/>
 Στο σημείο αυτό, έχουμε ολοκληρώσει την εγκατάσταση του εικονικού εργαστηρίου.
