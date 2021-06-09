@@ -14,12 +14,12 @@ ___
 
 Για την εγκατάσταση των υπηρεσιών στα containers, θα αξιοποιηθεί το repository [data_collector_service](https://git.swarmlab.io:3000/Simosps/data_collector_service.git).<br/><br/>
 
-### 1. Προαπαιτούμενα
+### 1. Προαπαιτούμενα<br/><br/>
 
 Για να αποκτήσουμε πρόσβαση στο περιβάλλον [swarmlab.io](http://docs.swarmlab.io/) και να εγκαταστήσουμε το εικονικό εργαστήριο [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux), θα πρέπει αρχικά να εγκαταστήσουμε την υπηρεσία swarmlab-hybrid και στη συνέχεια να δημιουργήσουμε λογαριασμό στο περιβάλλον.<br/>
 Περισσότερες πληροφορίες για την εγκατάσταση της υπηρεσίας swarmlab-hybrid, μπορείτε να βρείτε [εδώ](https://git.swarmlab.io:3000/zeus/swarmlab-hybrid).<br/><br/>
 
-### 2. Δημιουργία του σμήνους (swarm)
+### 2. Δημιουργία του σμήνους (swarm)<br/><br/>
 
 Σε αυτή τη παράγραφο, θα δημιουργήσουμε το σμήνος, το οποίο θα αποτελείται από έναν κεντρικό κόμβο, τον master, και έναν ή περισσότερους κόμβους με τους οποίους θα συνδέεται ο master, τους workers.
 Για να το επιτύχουμε αυτό, θα αξιοποιήσουμε όπως είπαμε και παραπάνω, το ήδη υπάρχον εικονικό εργαστήριο [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux) του [swarmlab.io](http://docs.swarmlab.io/).<br/>
@@ -42,9 +42,10 @@ docker container ls
 
 ![Vlab_Swarm](./images/vlab_swarm.png)<br/><br/>
 
-### 3. Κατανόηση της διαδικασίας δημιουργίας του σμήνους (swarm)
+### 3. Κατανόηση της διαδικασίας δημιουργίας του σμήνους (swarm)<br/><br/>
 
-Για τον ορισμό των χαρακτηριστικών των κόμβων από τους οποίους θα αποτελείται το σμήνος, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
+Για τον ορισμό των χαρακτηριστικών των κόμβων από τους οποίους θα αποτελείται το σμήνος, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:<br/><br/>
+
 
 ```
 version: "2"
@@ -108,9 +109,9 @@ services:
 networks:
   hybrid-linux:
 ```
-
-Για τη δημιουργία του σμήνους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το αρχείο swarmlab-sec.
-Πιο συγκεκριμένα, όταν πατάμε το πλήκτρο "Up" στο γραφικό περιβάλλον του [swarmlab.io](http://docs.swarmlab.io/), εκτελούνται οι ακόλουθες συναρτήσεις που περιλαμβάνονται στο αρχείο swarmlab-sec:
+<br/><br/>
+Για τη δημιουργία του σμήνους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το αρχείο swarmlab-sec.<br/>
+Πιο συγκεκριμένα, όταν πατάμε το πλήκτρο "Up" στο γραφικό περιβάλλον του [swarmlab.io](http://docs.swarmlab.io/), εκτελούνται οι ακόλουθες συναρτήσεις που περιλαμβάνονται στο αρχείο swarmlab-sec:<br/><br/>
 
 ```
 # Otan patame to pliktro Up sto grafiko perivallon
@@ -128,9 +129,9 @@ if [ $COMMAND_UP -eq 1 ]; then
     prompt_ready
     show_instruction
 ```
-
+<br/><br/>
 Από τις παραπάνω συναρτήσεις, εμείς θα επικεντρωθούμε στη συνάρτηση up_master(), η οποία δημιουργεί τον master:
-
+<br/><br/>
 ```
 #Synartisi dimiourgias tou master
 up_master ()
@@ -142,11 +143,12 @@ up_master ()
     docker-compose up -d master
 }
 ```
-
-και στη συνάρτηση up_workers() η οποία ορίζει το πλήθος των workers και τους δημιουργεί:
+<br/><br/>
+και στη συνάρτηση up_workers() η οποία ορίζει το πλήθος των workers και τους δημιουργεί πραγματοποιώντας scaling της υπηρεσιας:
 
 ```
 #Synartisi orismou tou plithous ton workers kai dimiourgias tous
+#pragmatopoiontas scaling tis ypiresias
 up_workers ()
 {
     printf "\\n\\n===> SPIN UP WORKER NODES"
@@ -164,41 +166,41 @@ up_workers ()
     docker-compose scale worker=${NUM_WORKER}
 }
 ```
+<br/><br/>
+
+### 4. Ορισμός υπηρεσίας για την υποστήριξη 'χώρου αποθήκευσης'<br/><br/>
+
+Σε αυτή τη παράγραφο, θα ορίσουμε την υπηρεσία για την υποστήριξη 'χώρου αποθήκευσης', η οποία θα είναι η [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).<br/>
+Η συγκεκριμένη υπηρεσία παρέχει ένα replica set, δηλαδή ένα σύνολο που αποτελείται από τρια [MongoDB](https://www.mongodb.com/) instances, τα οποία διατηρούν το ίδιο σύνολο αρχείων. Το replica set αυτό, θα χρησιμοποιηθεί για την αποθήκευση των συμβάντων που συμβαίνουν στους τερματικούς σταθμούς του σμήνους.
+
+Για να θέσουμε σε λειτουργία το replica set, στο [swarmlab.io](http://docs.swarmlab.io/) μεταβαίνουμε στην καρτέλα Private/Local -> Storage, εκτελούμε την εντολή που θα μας εμφανίσει το σύστημα, και επιλέγουμε να σηκώσουμε τα τρια [MongoDB](https://www.mongodb.com/) instances:<br/><br/>
 
 
-### 4. Ορισμός υπηρεσίας για την υποστήριξη 'χώρου αποθήκευσης'
-
-Σε αυτή τη παράγραφο, θα ορίσουμε την υπηρεσία για την υποστήριξη 'χώρου αποθήκευσης', η οποία θα είναι η [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
-Η συγκεκριμένη υπηρεσία παρέχει ένα replica set, δηλαδή ένα σύνολο που αποτελείται από τρια MongoDB instances, τα οποία διατηρούν το ίδιο σύνολο αρχείων. Το replica set αυτό, θα χρησιμοποιηθεί για την αποθήκευση των συμβάντων που συμβαίνουν στους τερματικούς σταθμούς του σμήνους.
-
-Για να θέσουμε σε λειτουργία το replica set, στο [swarmlab.io](http://docs.swarmlab.io/) μεταβαίνουμε στην καρτέλα Private/Local -> Storage, εκτελούμε την εντολή που θα μας εμφανίσει το σύστημα, και επιλέγουμε να σηκώσουμε τα τρια MongoDB instances:
+![Υπηρεσία βάσης](./images/picture3.png)<br/><br/>
 
 
-![Υπηρεσία βάσης](./images/picture3.png)
-
-
-Εκτελώντας την ακόλουθη εντολή, μπορούμε να δούμε τα containers που έχουν δημιουργηθεί στο [docker](https://www.docker.com/):
+Εκτελώντας την ακόλουθη εντολή, μπορούμε να δούμε τα containers που έχουν δημιουργηθεί στο [docker](https://www.docker.com/):<br/><br/>
 
 
 ```
 docker container ls
 ```
 
+<br/><br/>
+![Λίστα container](./images/picture4.png)<br/><br/>
 
-![Λίστα container](./images/picture4.png)
 
+Παρατηρώντας το αποτέλεσμα του τερματικού, μπορούμε να δούμε εκτός των άλλων, και τα τρία [MongoDB](https://www.mongodb.com/) instances που δημιουργήσαμε.<br/><br/>
 
-Παρατηρώντας το αποτέλεσμα του τερματικού, μπορούμε να δούμε εκτός των άλλων, και τα τρία MongoDB instances που δημιουργήσαμε.
-
-Το MongoDB replica set που μόλις δημιουργήσαμε φαίνεται στο ακόλουθο διάγραμμα:
+Το [MongoDB](https://www.mongodb.com/) replica set που μόλις δημιουργήσαμε φαίνεται στο ακόλουθο διάγραμμα:
 
 
 ![Replica Set](./images/mongo_replica_set.png)
 
 
-### 5. Κατανόηση της διαδικασίας δημιουργίας της βάσης δεδομένων
+### 5. Κατανόηση της διαδικασίας δημιουργίας της βάσης δεδομένων<br/><br/>
 
-Για τον ορισμό των MongoDB instances και των χαρακτηριστικών τους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:
+Για τον ορισμό των [MongoDB](https://www.mongodb.com/) instances και των χαρακτηριστικών τους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο docker-compose.yml αρχείο:<br/><br/>
 
 
 ```
