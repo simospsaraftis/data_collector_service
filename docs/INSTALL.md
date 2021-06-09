@@ -49,12 +49,23 @@ docker container ls
 ```
 version: "2"
 
+#Orizetai enas registry server
+#o opoios tha akouei stin porta 5000
+#kai xrisimopoieitai gia tin apothikeysi docker images
 services:
   registry:
     image: registry
     ports:
       - "5000:5000"
 
+#Orizetai o master
+#o opoios tha xrisimopoiei to image hybrid-linux
+#To onoma tou komvou master tha einai hybrid-linux_master_1
+#kai to domain tou tha einai to hybrid-linux_hybrid-linux
+#meso tou cap_add orizetai oti o master tha mporei na pragmatopoiei leitourgies diaxeiristi diktyou
+#orizetai oti o xristis tou komvou master tha exei dikaiomata root
+#ginetai mapping tis ssh portas stin porta tou host
+#orizetai oti to diktyo sto opoio tha anikei o master tha einai to hybrid-linux 
   master:
     image: localhost:5000/hybrid-linux
     privileged: true
@@ -73,6 +84,12 @@ services:
       - /home/simos/swarmlab-hybrid/src-local/instance/hybrid-linux/hybrid-linux/project:/project
 
 
+#Orizetai o worker
+#o opoios tha xrisimopoiei to image hybrid-linux
+#To domain tou komvou worker tha einai to hybrid-linux_hybrid-linux
+#orizetai oti o worker tha mporei na pragmatopoiei leitourgies diaxeiristi diktyou
+#orizetai oti o xristis tou komvou worker tha exei dikaiomata root
+#orizetai oti to diktyo sto opoio tha anikei o worker tha einai to hybrid-linux
   worker:
     image: localhost:5000/hybrid-linux
     privileged: true
