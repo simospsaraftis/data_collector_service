@@ -34,6 +34,6 @@ ___
 
 ![Vlab Final](./docs/images/vlab_diagram.png)<br/><br/>
 
-Πληροφορίες για την εγκατάσταση του εικονικού εργαστηρίου μπορείτε να βρείτε στο αρχείο [INSTALL](https://git.swarmlab.io:3000/Simosps/data_collector_service/src/branch/master/docs/USAGE.md)
+Πληροφορίες για την εγκατάσταση του εικονικού εργαστηρίου μπορείτε να βρείτε στο αρχείο [INSTALL](https://git.swarmlab.io:3000/Simosps/data_collector_service/src/branch/master/docs/INSTALL.md)
 
-Πληροφορίες για τη χρήση του εικονικού εργαστηρίου μπορείτε να βρείτε στο αρχείο [USAGE]
+Πληροφορίες για τη χρήση του εικονικού εργαστηρίου μπορείτε να βρείτε στο αρχείο [USAGE](https://git.swarmlab.io:3000/Simosps/data_collector_service/src/branch/master/docs/USAGE.md)
