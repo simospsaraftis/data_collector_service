@@ -1,5 +1,5 @@
 # Υπολογιστική Νέφους και Υπηρεσίες - Εργαστηριακή Άσκηση 2021: Υπηρεσία Συλλογής Δεδομένων (Data Collector Service)
-Ψαραύτης-Σουράνης Συμεών - [@Simosps](https://git.swarmlab.io:3000/Simosps) - Αριθμός Μητρώου: 141049
+Ψαραύτης-Σουράνης Συμεών - [@simospsaraftis](https://github.com/simospsaraftis) - Αριθμός Μητρώου: 141049
 ___
 
 
