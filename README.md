@@ -32,7 +32,7 @@
 
 Η αρχιτεκτονική της εφαρμογής, φαίνεται στο ακόλουθο διάγραμμα:
 
-![App Final](./images/vlab_diagram.png)<br/><br/>
+![App Diagram](./images/app_diagram.png)<br/><br/>
 
 Πληροφορίες για την εγκατάσταση της εφαρμογής μπορείτε να βρείτε στο αρχείο [INSTALL](./INSTALL.md)
 
