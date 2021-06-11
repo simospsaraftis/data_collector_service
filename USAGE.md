@@ -1,7 +1,5 @@
 # Υπολογιστική Νέφους και Υπηρεσίες - Εργαστηριακή Άσκηση 2021: Υπηρεσία Συλλογής Δεδομένων (Data Collector Service)
 [@simospsaraftis](https://github.com/simospsaraftis)
-___
-
 
 ## Χρήση του εικονικού εργαστηρίου
 
