@@ -29,15 +29,15 @@ const cors = require('cors');
 //kai tha apagoreyetai i prosvasi se osous aitountai prosvasi
 //alla vriskontai ektos tou diktiou
 var allowedOrigins = [ 
-      "http://0.0.0.0:8085"
-      ];
+		"http://0.0.0.0:8085"
+];
 
 
 //Module pou parexei to Socket.IO
 const io = require("socket.io")(server, {
    cors: {
-         origin: allowedOrigins,
-         methods: ["GET", "POST"]
+	 		origin: allowedOrigins,
+	 		methods: ["GET", "POST"]
    }
 });
 
@@ -55,6 +55,7 @@ server.listen(serverPort, () => {
 //Antistoixo minima emfanizetai kai otan o client aposyndethei
 io.on('connection', (socket) => {
 		console.log("Client connected");
+
 		socket.on('disconnect',() => {
 				console.log("Client disconnected");
 		});
@@ -81,7 +82,7 @@ var connectWithRetry = function() {
 	  		if(err)
 				{
 						console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-            setTimeout(connectWithRetry, 5000);
+        		setTimeout(connectWithRetry, 5000);
 				}
 				else
 				{
@@ -91,21 +92,21 @@ var connectWithRetry = function() {
 		  			const changeStream = taskCollection.watch();
 
 		  			changeStream.on('change', (change) => {
-							  if (change.operationType === 'insert') 
+								if (change.operationType === 'insert') 
 								{
-								  const content = {
-                      id: change.fullDocument._id,
-                      message: change.fullDocument.message,
-                      tailed_path: change.fullDocument.tailed_path,
-                      time: change.fullDocument.time
-                  }
+										const content = {
+                    		id: change.fullDocument._id,
+                    		message: change.fullDocument.message,
+                    		tailed_path: change.fullDocument.tailed_path,
+                    		time: change.fullDocument.time
+                  	}
 
-									console.log(content);
-									transmit(content);
+										console.log(content);
+										transmit(content);
 								}
 								else if (change.operationType === 'invalidate')
                 {
-                    console.log("ChangeStream closed");
+                		console.log("ChangeStream closed");
                 }
 						});
 				}				
