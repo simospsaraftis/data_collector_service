@@ -29,15 +29,15 @@ const cors = require('cors');
 //kai tha apagoreyetai i prosvasi se osous aitountai prosvasi
 //alla vriskontai ektos tou diktiou
 var allowedOrigins = [ 
-		"http://0.0.0.0:8085"
+	"http://0.0.0.0:8085"
 ];
 
 
 //Module pou parexei to Socket.IO
 const io = require("socket.io")(server, {
-   cors: {
-	 		origin: allowedOrigins,
-	 		methods: ["GET", "POST"]
+	cors: {
+		origin: allowedOrigins,
+		methods: ["GET", "POST"]
    }
 });
 
@@ -46,7 +46,7 @@ const io = require("socket.io")(server, {
 
 //O server akouei gia tyxon syndeseis client se ayton, sto port pou vrisketai sti metavliti serverPort
 server.listen(serverPort, () => {
-		console.log("HTTP server listening on port %s", serverPort);
+	console.log("HTTP server listening on port %s", serverPort);
 });
 
 
@@ -54,16 +54,16 @@ server.listen(serverPort, () => {
 //Otan kapoios client pragmatopoiisei sindesi ston server, emfanizetai katallilo minima
 //Antistoixo minima emfanizetai kai otan o client aposyndethei
 io.on('connection', (socket) => {
-		console.log("Client connected");
+	console.log("Client connected");
 
-		socket.on('disconnect',() => {
-				console.log("Client disconnected");
-		});
+	socket.on('disconnect',() => {
+		console.log("Client disconnected");
+	});
 });
 
 //Stathera mesa stin opoia pragmatopoieitai i apostoli ton dedomenon pou eiserxontai sti vasi, stous komvous tou sminous
 const transmit = change => {
-		io.emit('change_msg',change);
+	io.emit('change_msg',change);
 }
 
 
