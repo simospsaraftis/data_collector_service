@@ -38,7 +38,7 @@ const io = require("socket.io")(server, {
 	cors: {
 		origin: allowedOrigins,
 		methods: ["GET", "POST"]
-   }
+	}
 });
 
 
@@ -78,39 +78,40 @@ var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.e
 
 var connectWithRetry = function() {
 
-		return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
-	  		if(err)
+	return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
+		if(err)
+		{
+			console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
+    	setTimeout(connectWithRetry, 5000);
+		}
+		else
+		{
+			var db = client.db(process.env.MONGO_INITDB_DATABASE);
+			console.log("Connected to mongodb");
+
+			const taskCollection = db.collection(process.env.MONGO_INITDB_COLLECTION);
+			const changeStream = taskCollection.watch();
+
+			changeStream.on('change', (change) => {
+				if (change.operationType === 'insert') 
 				{
-						console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-        		setTimeout(connectWithRetry, 5000);
+					const content = {
+        		id: change.fullDocument._id,
+            message: change.fullDocument.message,
+            tailed_path: change.fullDocument.tailed_path,
+            time: change.fullDocument.time
+					}
+
+					console.log(content);
+					transmit(content);
 				}
-				else
-				{
-		  			var db = client.db(process.env.MONGO_INITDB_DATABASE);
-						console.log("Connected to mongodb");
-		  			const taskCollection = db.collection(process.env.MONGO_INITDB_COLLECTION);
-		  			const changeStream = taskCollection.watch();
-
-		  			changeStream.on('change', (change) => {
-								if (change.operationType === 'insert') 
-								{
-										const content = {
-                    		id: change.fullDocument._id,
-                    		message: change.fullDocument.message,
-                    		tailed_path: change.fullDocument.tailed_path,
-                    		time: change.fullDocument.time
-                  	}
-
-										console.log(content);
-										transmit(content);
-								}
-								else if (change.operationType === 'invalidate')
-                {
-                		console.log("ChangeStream closed");
-                }
-						});
-				}				
-		});
+				else if (change.operationType === 'invalidate')
+        {
+        	console.log("ChangeStream closed");
+        }
+			});
+		}				
+	});
 };
 connectWithRetry();
 
