@@ -1,5 +1,5 @@
 # Υπολογιστική Νέφους και Υπηρεσίες - Εργαστηριακή Άσκηση 2021: Υπηρεσία Συλλογής Δεδομένων (Data Collector Service)
-Ψαραύτης-Σουράνης Συμεών - [@simospsaraftis](https://github.com/simospsaraftis) - Αριθμός Μητρώου: 141049
+[@simospsaraftis](https://github.com/simospsaraftis)
 ___
 
 
