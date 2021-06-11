@@ -14,7 +14,7 @@ const socket = io.connect(URL, {reconnect:true});		//Anoigei mia syndesi me ton 
 
 
 socket.on('connect', (socket) => {		//Otan o client syndethei me ton server, emfanizetai katallilo minima
-		console.log("Client connected");
+	console.log("Client connected");
 });
 
 
@@ -23,5 +23,5 @@ socket.on('connect', (socket) => {		//Otan o client syndethei me ton server, emf
 //ston client sxetika me kapoia alagi pou exei ginei sti vasi dedomenon, 
 //o client to lamvanei kai to emfanizei sto terminal
 socket.on('change_msg', (msg) => {
-		console.log(msg);
+	console.log(msg);
 });
