@@ -848,16 +848,16 @@ const cors = require('cors');
 //kai tha apagoreyetai i prosvasi se osous aitountai prosvasi
 //alla vriskontai ektos tou diktiou
 var allowedOrigins = [ 
-      "http://0.0.0.0:8085"
-      ];
+	"http://0.0.0.0:8085"
+];
 
 
 //Module pou parexei to Socket.IO
 const io = require("socket.io")(server, {
-   cors: {
-         origin: allowedOrigins,
-         methods: ["GET", "POST"]
-   }
+	cors: {
+		origin: allowedOrigins,
+		methods: ["GET", "POST"]
+	}
 });
 
 
@@ -865,7 +865,7 @@ const io = require("socket.io")(server, {
 
 //O server akouei gia tyxon syndeseis client se ayton, sto port pou vrisketai sti metavliti serverPort
 server.listen(serverPort, () => {
-		console.log("HTTP server listening on port %s", serverPort);
+	console.log("HTTP server listening on port %s", serverPort);
 });
 
 
@@ -873,16 +873,16 @@ server.listen(serverPort, () => {
 //Otan kapoios client pragmatopoiisei sindesi ston server, emfanizetai katallilo minima
 //Antistoixo minima emfanizetai kai otan o client aposyndethei
 io.on('connection', (socket) => {
-		console.log("Client connected");
-		console.log(socket.handshake.address);
-		socket.on('disconnect',() => {
-				console.log("Client disconnected");
-		});
+	console.log("Client connected");
+
+	socket.on('disconnect',() => {
+		console.log("Client disconnected");
+	});
 });
 
 //Stathera mesa stin opoia pragmatopoieitai i apostoli ton dedomenon pou eiserxontai sti vasi, stous komvous tou sminous
 const transmit = change => {
-		io.emit('change_msg',change);
+	io.emit('change_msg',change);
 }
 
 
@@ -897,39 +897,40 @@ var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.e
 
 var connectWithRetry = function() {
 
-		return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
-	  		if(err)
+	return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
+		if(err)
+		{
+			console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
+			setTimeout(connectWithRetry, 5000);
+		}
+		else
+		{
+			var db = client.db(process.env.MONGO_INITDB_DATABASE);
+			console.log("Connected to mongodb");
+
+			const taskCollection = db.collection(process.env.MONGO_INITDB_COLLECTION);
+			const changeStream = taskCollection.watch();
+
+			changeStream.on('change', (change) => {
+				if (change.operationType === 'insert') 
 				{
-						console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-            setTimeout(connectWithRetry, 5000);
+					const content = {
+						id: change.fullDocument._id,
+						message: change.fullDocument.message,
+						tailed_path: change.fullDocument.tailed_path,
+						time: change.fullDocument.time
+					}
+
+					console.log(content);
+					transmit(content);
 				}
-				else
+				else if (change.operationType === 'invalidate')
 				{
-		  			var db = client.db(process.env.MONGO_INITDB_DATABASE);
-						console.log("Connected to mongodb");
-		  			const taskCollection = db.collection(process.env.MONGO_INITDB_COLLECTION);
-		  			const changeStream = taskCollection.watch();
-
-		  			changeStream.on('change', (change) => {
-							  if (change.operationType === 'insert') 
-								{
-								  const content = {
-                      id: change.fullDocument._id,
-                      message: change.fullDocument.message,
-                      tailed_path: change.fullDocument.tailed_path,
-                      time: change.fullDocument.time
-                  }
-
-									console.log(content);
-									transmit(content);
-								}
-								else if (change.operationType === 'invalidate')
-                {
-                    console.log("ChangeStream closed");
-                }
-						});
-				}				
-		});
+					console.log("ChangeStream closed");
+				}
+			});
+		}				
+	});
 };
 connectWithRetry();
 
@@ -954,7 +955,7 @@ const socket = io.connect(URL, {reconnect:true});		//Anoigei mia syndesi me ton 
 
 
 socket.on('connect', (socket) => {		//Otan o client syndethei me ton server, emfanizetai katallilo minima
-		console.log("Client connected");
+	console.log("Client connected");
 });
 
 
@@ -963,7 +964,7 @@ socket.on('connect', (socket) => {		//Otan o client syndethei me ton server, emf
 //ston client sxetika me kapoia alagi pou exei ginei sti vasi dedomenon, 
 //o client to lamvanei kai to emfanizei sto terminal
 socket.on('change_msg', (msg) => {
-		console.log(msg);
+	console.log(msg);
 });
 
 ```
