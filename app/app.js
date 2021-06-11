@@ -96,19 +96,19 @@ var connectWithRetry = function() {
 				if (change.operationType === 'insert') 
 				{
 					const content = {
-        		id: change.fullDocument._id,
-            message: change.fullDocument.message,
-            tailed_path: change.fullDocument.tailed_path,
-            time: change.fullDocument.time
+						id: change.fullDocument._id,
+						message: change.fullDocument.message,
+						tailed_path: change.fullDocument.tailed_path,
+						time: change.fullDocument.time
 					}
 
 					console.log(content);
 					transmit(content);
 				}
 				else if (change.operationType === 'invalidate')
-        {
-        	console.log("ChangeStream closed");
-        }
+				{
+					console.log("ChangeStream closed");
+				}
 			});
 		}				
 	});
