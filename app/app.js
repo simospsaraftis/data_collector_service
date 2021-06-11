@@ -82,7 +82,7 @@ var connectWithRetry = function() {
 		if(err)
 		{
 			console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-    	setTimeout(connectWithRetry, 5000);
+			setTimeout(connectWithRetry, 5000);
 		}
 		else
 		{
