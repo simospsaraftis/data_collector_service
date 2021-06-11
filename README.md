@@ -15,6 +15,12 @@
 - διαθέτει change stream για την άμεση ανίχνευση και μεταφορά των δεδομένων/συμβάντων από τη βάση στον κεντρικό κόμβο (master)
 - διαθέτει websocket σύνδεσης του κεντρικού κόμβου (master) με τους υπόλοιπους κόμβους (workers), για άμεση μεταφορά των δεδομένων/συμβάντων σε αυτούς<br/><br/>
 
+
+Για τη δημιουργία του σμήνους, αξιοποιήθηκε το εικονικό εργαστήριο [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux), που παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
+
+Για την υποστήριξη 'χώρου αποθήκευσης', αξιοποιήθηκε η υπηρεσία [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), που επίσης παρέχεται από το περιβάλλον [swarmlab.io](http://docs.swarmlab.io/).
+
+
 ### 2. Τεχνολογίες που χρησιμοποιήθηκαν
 
 - [Ansible](https://www.ansible.com/)<br/>
