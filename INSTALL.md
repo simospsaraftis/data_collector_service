@@ -418,6 +418,7 @@ docker exec -it -udocker hybrid-linux_master_1 /bin/bash
 <br/><br/>
 ```
 sudo git clone https://git.swarmlab.io:3000/Simosps/data_collector_service.git
+
 cd data_collector_service
 ```
 <br/><br/>
