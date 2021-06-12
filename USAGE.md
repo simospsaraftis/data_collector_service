@@ -13,7 +13,7 @@
 docker exec -it -udocker hybrid-linux_master_1 /bin/bash
 ```
 <br/><br/>
-Στη συνέχεια, μεταβαίνουμε στον κατάλογο /data_collector_service/app και ενεργοποιούμε τον server, εκτελώντας την ακόλουθη εντολή στο τερματικό του hybrid-linux_master_1:<br/><br/>
+Στη συνέχεια, μεταβαίνουμε στον κατάλογο /data_collector_service/app και ενεργοποιούμε τον server, εκτελώντας τις ακόλουθες εντολές στο τερματικό του hybrid-linux_master_1:<br/><br/>
 
 ```
 cd /data_collector_service/app
@@ -35,7 +35,7 @@ docker exec -it -udocker hybrid-linux_worker_1 /bin/bash
 docker exec -it -udocker hybrid-linux_worker_2 /bin/bash
 ```
 <br/><br/>
-Μεταβαίνουμε στον κατάλογο /client_file και ενεργοποιούμε τους clients, εκτελώντας την ακόλουθη εντολή στα τερματικά των workers:
+Μεταβαίνουμε στον κατάλογο /client_file και ενεργοποιούμε τους clients, εκτελώντας τις ακόλουθες εντολές στα τερματικά των workers:
 <br/><br/>
 ```
 cd /client_file
