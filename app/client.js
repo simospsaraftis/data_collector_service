@@ -5,7 +5,7 @@ const io = require("socket.io-client");		//Socket.IO module gia ton client
 //Orizoume to URL gia ti syndesi tou client me ton master
 //Exoume dosei onomata ston master kai stous workers outos oste na mporoume na anaferomaste se aytous
 //eukola xoris na xreiazetai na xrisimopoioume tis IP dieythinseis tous
-const URL = "http://hybrid-linux_master_1:8086";
+const URL = "http://hybrid-linux_master_1:8085";
 
 
 
