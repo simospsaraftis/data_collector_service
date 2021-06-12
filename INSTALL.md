@@ -109,7 +109,7 @@ networks:
   hybrid-linux:
 ```
 <br/><br/>
-Για τη δημιουργία του σμήνους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το αρχείο swarmlab-sec.<br/>
+Για τη δημιουργία του σμήνους, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το αρχείο με όνομα swarmlab-sec.<br/>
 Πιο συγκεκριμένα, όταν πατάμε το πλήκτρο "Up" στο γραφικό περιβάλλον του [swarmlab.io](http://docs.swarmlab.io/), εκτελούνται οι ακόλουθες συναρτήσεις που περιλαμβάνονται στο αρχείο swarmlab-sec:<br/><br/>
 
 ```
