@@ -361,7 +361,6 @@ networks:
 
 Για τη δημιουργία και το deploy των containers, το [swarmlab.io](http://docs.swarmlab.io/) χρησιμοποιεί το ακόλουθο bash αρχείο με όνομα run.sh:<br/><br/>
 
-
 ```
 #!/bin/sh
 
