@@ -6,18 +6,18 @@
     user: "docker"
   tasks:
 
-     # ----------------------------------------------------------------------
-     # task pou diagrafei to directory client_file ean yparxei idi stous workers
-     # ----------------------------------------------------------------------
+     # ----------------------------------------------------------------------------------------------
+     # task pou diagrafei to directory client_file ean yparxei idi stous workers meso tou module file
+     # ----------------------------------------------------------------------------------------------
     - name: client directory remove
       become: true
       file:
         state: absent
         path: /client_file
 
-     # ----------------------------------------------------------
-     # task pou dimiourgei to directory client_file stous workers
-     # ----------------------------------------------------------
+     # -------------------------------------------------------------------------------
+     # task pou dimiourgei to directory client_file stous workers meso tou module file
+     # -------------------------------------------------------------------------------
     - name: make /client_file
       become: true
       file:
@@ -27,9 +27,9 @@
         group: docker
         mode: '0777'
 
-     # ---------------------------------------------------------------------------------------------
-     # task pou antigrafei to arxeio client.js pou periexei ton kodika gia ton client, stous workers
-     # ---------------------------------------------------------------------------------------------
+     # ------------------------------------------------------------------------------------------------------------------
+     # task pou antigrafei to arxeio client.js pou periexei ton kodika gia ton client, stous workers meso tou module copy
+     # ------------------------------------------------------------------------------------------------------------------
     - name: cp client.js
       become: true
       copy:
@@ -39,33 +39,33 @@
         group: docker
         mode: '0755'
 
-     # --------------------------------------------------------------
-     # task pou katevazei to nodesource_setup.sh arxeio stous workers
-     # --------------------------------------------------------------
+     # --------------------------------------------------------------------------------------
+     # task pou katevazei to nodesource_setup.sh arxeio stous workers meso tou module get_url
+     # --------------------------------------------------------------------------------------
     - name: nodesource get
       get_url:
         url: https://deb.nodesource.com/setup_16.x
         dest: /client_file/nodesource_setup.sh
 
-     # ------------------------------------------------------------
-     # task pou ektelei to nodesource_setup.sh arxeio stous workers
-     # ------------------------------------------------------------
+     # ------------------------------------------------------------------------------------
+     # task pou ektelei to nodesource_setup.sh arxeio stous workers meso tou module command
+     # ------------------------------------------------------------------------------------
     - name: start nodesource run
       become: true
       command: bash /client_file/nodesource_setup.sh
 
-     # --------------------------------------------------------------------
-     # task pou diagrafei to nodesource_setup.sh arxeio meta tin egatastasi
-     # --------------------------------------------------------------------
+     # -----------------------------------------------------------------------------------------
+     # task pou diagrafei to nodesource_setup.sh arxeio meta tin egatastasi meso tou module file
+     # -----------------------------------------------------------------------------------------
     - name: start nodesource remove
       become: true
       file: 
         state: absent
         path: /client_file/nodesource_setup.sh
 
-     # ------------------------------------------------------------------
-     # task gia tin enimerosi ton idi egatestimenon paketon stous workers
-     # ------------------------------------------------------------------
+     # --------------------------------------------------------------------------------------
+     # task gia tin enimerosi ton idi egatestimenon paketon stous workers meso tou module apt
+     # --------------------------------------------------------------------------------------
     - name: apt update packages
       become: true
       apt:
@@ -76,9 +76,9 @@
         install_recommends: true
         autoremove: true
 
-     # ------------------------------------------------
-     # task gia tin egatastasi tou nodejs stous workers
-     # ------------------------------------------------
+     # --------------------------------------------------------------------
+     # task gia tin egatastasi tou nodejs stous workers meso tou module apt
+     # --------------------------------------------------------------------
     - name: apt install packages
       become: true
       apt:
@@ -91,10 +91,11 @@
         packages:
          - nodejs
 
-     # ------------------------------------------------------------------------------------------
-     # npm begin
-     # tasks gia tin egatastasi paketon pou einai anagaia gia ti leitourgia tou nodejs meso npm
-     # ------------------------------------------------------------------------------------------
+     # ---------------------------------------------------------------------
+     # gem begin
+     # task gia ti dimiourgia katalogou gia to npm mesa ston katalogo docker
+     # me sigekrimena dikaiomata
+     # ---------------------------------------------------------------------
     - name: make dir for npm
       become: true
       file:
@@ -104,6 +105,9 @@
         group: docker
         mode: '0755'
 
+     # --------------------------------------------------------------------
+     # task gia tin egatastasi tou socket.io-client ekdosis 4.1.2, meso npm
+     # --------------------------------------------------------------------
     - name: npm install socket.io-client
       become: true
       npm:

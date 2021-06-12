@@ -1,4 +1,9 @@
 ---
+# Sto hosts, vaftizoume tin omada ypologiston stous opoious theloume
+# na ginei i egatastasi, "service"
+# Sto remote_user, dilonoume oti o xristis tou apomakrysmenou mixanimatos 
+# legetai docker
+# Sto vars, dilonoume tin metavliti user gia na ti xrisimopoiisoume parakato
 - hosts: service
   remote_user: docker
   gather_facts: no
@@ -6,9 +11,9 @@
     user: "docker" 
   tasks:
 
-     # ----------------------------------------------------
-     # task gia tin enimerosi ton idi egatestimenon paketon
-     # ----------------------------------------------------
+     # ------------------------------------------------------------------------
+     # task gia tin enimerosi ton idi egatestimenon paketon meso tou module apt
+     # ------------------------------------------------------------------------
     - name: apt update packages
       become: true
       apt:
@@ -19,9 +24,9 @@
         install_recommends: true
         autoremove: true
 
-     # ----------------------------------------------
-     # task gia tin egatastasi ton akolouthon paketon
-     # ----------------------------------------------
+     # ------------------------------------------------------------------
+     # task gia tin egatastasi ton akolouthon paketon meso tou module apt
+     # ------------------------------------------------------------------
     - name: apt install packages
       become: true
       apt:
@@ -43,7 +48,8 @@
          - ruby-dev
 
      # --------------------------------------------------------------------------------
-     # task gia ti dimiourgia directory gia to fluentd apomakrismena me dikaiomata root
+     # task gia ti dimiourgia katalogou meso tou module file 
+     # gia to fluentd apomakrismena me dikaiomata root
      # pou na anikei ston xristi kai sto group docker kai na exei pliri dikaiomata
      # --------------------------------------------------------------------------------
     - name: make /var/log-in
@@ -55,10 +61,11 @@
         group: docker
         mode: '0777'
 
-     # -----------------------------------------------------------------------------------------
+     # ---------------------------------------------------------------------
      # gem begin
-     # tasks gia tin egatastasi paketon pou einai anagaia gia ti leitourgia tou fluentd meso gem
-     # ------------------------------------------------------------------------------------------
+     # task gia ti dimiourgia katalogou gia to gem mesa ston katalogo docker
+     # me sigekrimena dikaiomata
+     # ---------------------------------------------------------------------
     - name: make dir for gem
       become: true
       file:
@@ -68,16 +75,24 @@
         group: docker
         mode: '0755'
 
+     # ------------------------------------------------------------------------------------------
+     # task gia tin egatastasi tou fluentd ekdosis 1.12.0, meso gem
+     # sto CONFIGURE_OPTS zitao na min mou valei ta doc arxeia
+     # meso tou PATH orizo mia environment variable pou einai energi mono se ayto to block kodika
+     # ------------------------------------------------------------------------------------------
     - name: gem install  fluentd
       #become: true
       gem:
         name: fluentd
         version: 1.12.0
         state: present
-      environment:
-        CONFIGURE_OPTS: '--disable-install-doc'
-        PATH: '/home/docker/.gem/ruby/2.5.0/bin:{{ ansible_env.PATH }}'
+      #environment:
+        #CONFIGURE_OPTS: '--disable-install-doc'
+        #PATH: '/home/docker/.gem/ruby/2.5.0/bin:{{ ansible_env.PATH }}'
 
+     # ---------------------------------------------------------------
+     # task gia tin egatastasi fluentd plugin gia ti MongoDB, meso gem
+     # ---------------------------------------------------------------
     - name: gem install fluent-plugin-mongo
       #become: true
       gem:
@@ -127,6 +142,10 @@
         group: docker
         mode: '0755'
 
+     # --------------------------------------------------------------------------------------------------
+     # task gia ti dimiourgia directory gia ta plugins tou fluentd apomakrismena me dikaiomata root
+     # pou na anikei ston xristi kai sto group docker kai na exei sygekrimena dikaiomata
+     # --------------------------------------------------------------------------------------------------
     - name: make dir fluentd
       become: true
       file:
@@ -136,10 +155,10 @@
         group: docker
         mode: '0755'
 
-     # ----------------------------------------------------------------------------------------------------------
-     # task pou antigrafei to fluentd.conf arxeio pou exoume dimiourgisei kai periexei to configuration tou 
-     # fluentd, sto directory pou dimiourgisame parapano me xristi kai group to docker kai sygekrimena dikaiomata
-     # ----------------------------------------------------------------------------------------------------------
+     # ------------------------------------------------------------------------------------------------------------------
+     # task pou me to module copy antigrafei to fluentd.conf arxeio pou exoume dimiourgisei kai periexei to configuration 
+     # tou fluentd, sto directory pou dimiourgisame parapano me xristi kai group to docker kai sygekrimena dikaiomata
+     # ------------------------------------------------------------------------------------------------------------------
     - name: cp fluentd.conf
       become: true
       copy:
@@ -149,9 +168,10 @@
         group: docker
         mode: 0755
 
-     # --------------------------------
-     # task gia tin ekinisi tou fluentd
-     # --------------------------------
+     # --------------------------------------------------------------------------------------------------
+     # task gia tin ekinisi tou fluentd sto paraskinio
+     # opou tou leme na diavasei to config arxeio fluent.conf pou antigrapsame ston katalogo /fluentd/etc
+     # --------------------------------------------------------------------------------------------------
     - name: start fluentd background
       shell: nohup /home/docker/.gem/ruby/2.5.0/bin/fluentd -c /fluentd/etc/fluent.conf -vv </dev/null >/dev/null 2>&1 &
  
