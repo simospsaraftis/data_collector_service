@@ -69,13 +69,13 @@ var resume_token = null		//Metavliti stin opoia apothikeyetai to simeio apo opou
 
 //Synartisi i opoia otan kaleitai dimiourgei to ChangeStream
 var watch_collection = function(client) {
-	client.db(process.env.MONGO_INITDB_DATABASE).collection(process.env.MONGO_INITDB_COLLECTION).watch({resumeAfter: resume_token})
+	var changeStream = client.db(process.env.MONGO_INITDB_DATABASE).collection(process.env.MONGO_INITDB_COLLECTION).watch({resumeAfter: resume_token})
 
 	//To ChangeStream akouei gia tyxon allages pou symvainoun sti vasi
 	//Otan pragmatopoieithei kapoio insert sti syllogi "logs" tis vasis,
 	//tha stalei ena insert event ston server meso tou ChangeStream
 	//kai o server afou emfanisei to periexomeno tou event sto termatiko tou, tha ta steilei stous clients meso tou io.emit()
-	.on('change', data => {
+	changeStream.on('change', data => {
 		resume_token = data._id
 		if (data.operationType === 'insert')
 		{
@@ -98,9 +98,9 @@ var watch_collection = function(client) {
 			console.log("ChangeStream closed");
 		}
 	})
-	//Ean yparxei kapoio error, ayto emfanizetai sto termatiko
+	//Ean yparxei kapoio error, emfanizetai sto termatiko
 	//kai kaleitai xana i synartisi gia na dimiourgithei xana to ChangeStream
-	.on('error', err => {
+	changeStream.on('error', err => {
 		console.log(err);
 		watch_collection(client);
 	})
