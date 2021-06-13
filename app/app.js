@@ -1,16 +1,16 @@
 var express = require('express');		//Module gia to web application framework
-var app = express();								//Dimiourgia enos express application
+var app = express();		//Dimiourgia enos express application
 
 
 const helmet = require('helmet');		//To module helmet parexei asfaleia 
-app.use(helmet());                  //sto express app thetontas HTTP headers
+app.use(helmet());		//sto express app thetontas HTTP headers
 
 
 app.use(express.json());		//Orizoume oti tha xeirizetai ta requests os JSON
 
 
-var http = require('http');							//Module pou epitrepei metafora dedomenon pano apo to HTTP protocol
-var serverPort = "8085";								//Orizoume tin porta stin opoia tha akouei o server
+var http = require('http');		//Module pou epitrepei metafora dedomenon pano apo to HTTP protocol
+var serverPort = "8085";		//Orizoume tin porta stin opoia tha akouei o server
 var server = http.createServer(app);		//Dimiourgia tou server
 
 
@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
 
 
 
-var resume_token = null	//Metavliti stin opoia apothikeyetai to simeio apo opou tha arxisei to ChangeStream otan antimetopistei to error
+var resume_token = null		//Metavliti stin opoia apothikeyetai to simeio apo opou tha arxisei to ChangeStream otan antimetopistei to error
 
 //Synartisi i opoia otan kaleitai dimiourgei to ChangeStream
 var watch_collection = function(client) {
