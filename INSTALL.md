@@ -454,15 +454,16 @@ config
   @type stdout
 </match>
 
-#===========================================================================#
-# block kodika pou dilonei: 
-# 1) apo pou tha diavazei to fluentd logs diaforon programaton, meso tou path
-# 2) ti tha diavazei to fluentd, meso tou @type
-# 3) pos tha onomazei to fluentd ayta pou tha diavazei, meso tou tag
+#=========================================================================#
+# block kodika pou: 
+# 1) dilonei apo pou tha diavazei to fluentd logs diaforon programaton, 
+# diladi statistika tou mixanimatos meso tou path
+# 2) meso tou module @type tail tou leei na kanei tail sto path
+# 3) meso tou tag tou leei na vaftisei tin pigi me to tag "stats.node"
 # ayta pou diavazei to fluentd metatrepontai se json
 # to pos_file einai to arxeio pou tha dimiourgithei mesa ston katalogo
-# gia na gnorizei to fluentd pou itan tin proigoumeni fora
-#============================================================================#
+# /tmp gia na gnorizei to fluentd pou itan tin proigoumeni fora pou diavase
+#=========================================================================#
 <source>
   @type tail
 
@@ -475,21 +476,23 @@ config
   <parse>
     @type json
   </parse>
-
+  
   pos_file /tmp/fluentd--1605454018.pos
 </source>
 #=========================================================================#
 
 #=========================================================================#
-# block kodika pou dilonei:
-# 1) apo pou tha diavazei to fluentd plirofories pou o xristis apothikeyei 
-# kai oi opoies thelei na metaferthoun, meso tou path
-# 2) ti tha diavazei to fluentd, meso tou @type
-# 3) pos tha onomazei to fluentd ayta pou tha diavazei, meso tou tag
+# block kodika pou:
+# 1) diloni apo pou tha diavazei to fluentd plirofories pou o xristis 
+# apothikeyei kai oi opoies thelei na metaferthoun, meso tou path
+# Epeidi exei asteriskous to fluentd tha diavasei oti ginetai mesa ston
+# katalogo log-in
+# 2) meso tou module @type tail tou leei na kanei tail sto path
+# 3) meso tou tag tou leei na vaftisei tin pigi me to tag "log.node"
 # den metatrepei ayta pou to fluentd diavazei se allo typo arxeiou
 # to pos_file einai to arxeio pou tha dimiourgithei mesa ston katalogo
-# gia na gnorizei to fluentd pou itan tin proigoumeni fora
-#==========================================================================#
+# /tmp gia na gnorizei to fluentd pou itan tin proigoumeni fora
+#=========================================================================#
 <source>
   @type tail
 
@@ -507,12 +510,19 @@ config
 </source>
 
 
-#====================================================================================#
-# Otan tha symvei kati me tag "log", to fluentd tha to apothikeysei sti vasi dedomenon
-# Orizetai to onoma tis vasis, to onoma xristi, to password, to replica_set
-# I vasi einai mia vasi dedomenon pou exo ftiaxei eidika gia ayton ton skopo
-# Exoyme episis, oti kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
-#=====================================================================================#
+#=======================================================================#
+# Orizoume ti tha kanoume me ayta pou diavasame
+# Otan tha symvei kati me tag "log", to fluentd tha to kanei copy
+# kai ta to apothikeysei sti vasi
+# Xrisimopoieitai to module mongo_replset pou exei sxesi me ti MongoDB
+# Dilonoume oti theloume na syndethei sti vasi "app_swarmlab"
+# Otan tha syndethei sti vasi tha parei to collection "logs"
+# Dilonoume tous server me to nodes
+# Dilonoume to username, to password kai epeidi exoume replica_set, to
+# dilonoume kai ayto, gia na mporesoume na syndethoume sti vasi
+# Ean paei kati strava tou leme na xanaprospathisei se 60 deyterolepta
+# Kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
+#=======================================================================#
 <match log.*>
   @type copy
   <store>
@@ -535,29 +545,36 @@ config
             flush_interval 20s
           </buffer>
   </store>
-  <store>
-        @type stdout
-  </store>
+#  <store>
+#        @type stdout
+#  </store>
 
 #  <store>
-#         @type file
-#         path /tmp/mylog
-#         <buffer>
-#           timekey 1d
-#           timekey_use_utc true
-#           timekey_wait 10s
-#         </buffer>
+#	  @type file
+#	  path /tmp/mylog
+#	  <buffer>
+#	    timekey 1d
+#	    timekey_use_utc true
+#	    timekey_wait 10s
+#	  </buffer>
 #  </store>
 
 
 </match>
 
-#==================================================================================================#
-# Antistoixa, otan tha symvei kati me tag "stats", to fluentd tha to apothikeysei sti vasi dedomenon
-# Orizetai to onoma tis vasis, to onoma xristi, to password, to replica_set
-# I vasi einai mia vasi dedomenon pou exo ftiaxei eidika gia ayton ton skopo
-# Exoyme episis, oti kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
-#==================================================================================================#
+#=======================================================================#
+# Orizoume ti tha kanoume me ayta pou diavasame
+# Otan tha symvei kati me tag "stats", to fluentd tha to kanei copy
+# kai ta to apothikeysei sti vasi
+# Xrisimopoieitai to module mongo_replset pou exei sxesi me ti MongoDB
+# Dilonoume oti theloume na syndethei sti vasi "app_swarmlab"
+# Otan tha syndethei sti vasi tha parei to collection "logs"
+# Dilonoume tous server me to nodes
+# Dilonoume to username, to password kai epeidi exoume replica_set, to
+# dilonoume kai ayto, gia na mporesoume na syndethoume sti vasi
+# Ean paei kati strava tou leme na xanaprospathisei se 60 deyterolepta
+# Kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
+#=======================================================================#
 <match stats.*>
   @type copy
   <store>
@@ -575,27 +592,31 @@ config
           capped
           capped_size 100m
   </store>
-  <store>
-       @type stdout
-  </store>
+#  <store>
+#       @type stdout
+#  </store>
 </match>
-
 ```
 <br/><br/>
 Επίσης, στον κατάλογο /data_collector_service/fluentd διαθέτουμε ένα αρχείο γραμμένο σε yaml με όνομα fluentd.yml, το οποίο περιλαμβάνει όλες εκείνες τι εντολές και εγκαταστάσεις που θέλουμε να πραγματοποιήσουμε απομακρυσμένα στους κόμβους του συστήματος μέσω του [ansible](https://www.ansible.com/):
 <br/><br/>
 ```
 ---
+# Sto hosts, vaftizoume tin omada ypologiston stous opoious theloume
+# na ginei i egatastasi, "service"
+# Sto remote_user, dilonoume oti o xristis tou apomakrysmenou mixanimatos 
+# legetai docker
+# Sto vars, dilonoume tin metavliti user gia na ti xrisimopoiisoume parakato
 - hosts: service
   remote_user: docker
   gather_facts: no
   vars:
-    user: "docker"
+    user: "docker" 
   tasks:
 
-     # ----------------------------------------------------
-     # task gia tin enimerosi ton idi egatestimenon paketon
-     # ----------------------------------------------------
+     # ------------------------------------------------------------------------
+     # task gia tin enimerosi ton idi egatestimenon paketon meso tou module apt
+     # ------------------------------------------------------------------------
     - name: apt update packages
       become: true
       apt:
@@ -606,9 +627,9 @@ config
         install_recommends: true
         autoremove: true
 
-     # ----------------------------------------------
-     # task gia tin egatastasi ton akolouthon paketon
-     # ----------------------------------------------
+     # ------------------------------------------------------------------
+     # task gia tin egatastasi ton akolouthon paketon meso tou module apt
+     # ------------------------------------------------------------------
     - name: apt install packages
       become: true
       apt:
@@ -630,7 +651,8 @@ config
          - ruby-dev
 
      # --------------------------------------------------------------------------------
-     # task gia ti dimiourgia directory gia to fluentd apomakrismena me dikaiomata root
+     # task gia ti dimiourgia katalogou meso tou module file 
+     # gia to fluentd apomakrismena me dikaiomata root
      # pou na anikei ston xristi kai sto group docker kai na exei pliri dikaiomata
      # --------------------------------------------------------------------------------
     - name: make /var/log-in
@@ -642,10 +664,11 @@ config
         group: docker
         mode: '0777'
 
-     # -----------------------------------------------------------------------------------------
+     # ---------------------------------------------------------------------
      # gem begin
-     # tasks gia tin egatastasi paketon pou einai anagaia gia ti leitourgia tou fluentd meso gem
-     # -----------------------------------------------------------------------------------------
+     # task gia ti dimiourgia katalogou gia to gem mesa ston katalogo docker
+     # me sigekrimena dikaiomata
+     # ---------------------------------------------------------------------
     - name: make dir for gem
       become: true
       file:
@@ -655,16 +678,24 @@ config
         group: docker
         mode: '0755'
 
+     # ------------------------------------------------------------------------------------------
+     # task gia tin egatastasi tou fluentd ekdosis 1.12.0, meso gem
+     # sto CONFIGURE_OPTS zitao na min mou valei ta doc arxeia
+     # meso tou PATH orizo mia environment variable pou einai energi mono se ayto to block kodika
+     # ------------------------------------------------------------------------------------------
     - name: gem install  fluentd
       #become: true
       gem:
         name: fluentd
         version: 1.12.0
         state: present
-      environment:
-        CONFIGURE_OPTS: '--disable-install-doc'
-        PATH: '/home/docker/.gem/ruby/2.5.0/bin:{{ ansible_env.PATH }}'
+      #environment:
+        #CONFIGURE_OPTS: '--disable-install-doc'
+        #PATH: '/home/docker/.gem/ruby/2.5.0/bin:{{ ansible_env.PATH }}'
 
+     # ---------------------------------------------------------------
+     # task gia tin egatastasi fluentd plugin gia ti MongoDB, meso gem
+     # ---------------------------------------------------------------
     - name: gem install fluent-plugin-mongo
       #become: true
       gem:
@@ -714,6 +745,10 @@ config
         group: docker
         mode: '0755'
 
+     # --------------------------------------------------------------------------------------------------
+     # task gia ti dimiourgia directory gia ta plugins tou fluentd apomakrismena me dikaiomata root
+     # pou na anikei ston xristi kai sto group docker kai na exei sygekrimena dikaiomata
+     # --------------------------------------------------------------------------------------------------
     - name: make dir fluentd
       become: true
       file:
@@ -723,10 +758,10 @@ config
         group: docker
         mode: '0755'
 
-     # ----------------------------------------------------------------------------------------------------------
-     # task pou antigrafei to fluentd.conf arxeio pou exoume dimiourgisei kai periexei to configuration tou 
-     # fluentd, sto directory pou dimiourgisame parapano me xristi kai group to docker kai sygekrimena dikaiomata
-     # ----------------------------------------------------------------------------------------------------------
+     # ------------------------------------------------------------------------------------------------------------------
+     # task pou me to module copy antigrafei to fluentd.conf arxeio pou exoume dimiourgisei kai periexei to configuration 
+     # tou fluentd, sto directory pou dimiourgisame parapano me xristi kai group to docker kai sygekrimena dikaiomata
+     # ------------------------------------------------------------------------------------------------------------------
     - name: cp fluentd.conf
       become: true
       copy:
@@ -736,23 +771,24 @@ config
         group: docker
         mode: 0755
 
-     # --------------------------------
-     # task gia tin ekinisi tou fluentd
-     # --------------------------------
+     # --------------------------------------------------------------------------------------------------
+     # task gia tin ekinisi tou fluentd sto paraskinio
+     # opou tou leme na diavasei to config arxeio fluent.conf pou antigrapsame ston katalogo /fluentd/etc
+     # --------------------------------------------------------------------------------------------------
     - name: start fluentd background
       shell: nohup /home/docker/.gem/ruby/2.5.0/bin/fluentd -c /fluentd/etc/fluent.conf -vv </dev/null >/dev/null 2>&1 &
-
+ 
 ```
 <br/><br/>
 Για να εγκαταστήσουμε και να τρέξουμε το [ansible](https://www.ansible.com/), το οποίο εγκαθιστά την υπηρεσία [fluentd](https://www.fluentd.org/) σε όλους τους κόμβους του σμήνους, έχουμε δημιουργήσει το ακόλουθο bash αρχείο με όνομα fluentd.yml.sh: 
 <br/><br/>
 ```
-!/bin/sh
+#!/bin/sh
 
-# Entoli pou enimeronei ta idi egatestimena paketa
+#Entoli pou pragmatopoiei enimerosi ton idi egatestimenon paketon
 sudo apt update -y
 
-# Entoli pou pragmatopoiei egatastasi tou ansible
+# Entoli pou pragmatopoiei egatastasi ton paketon ansible kai sshpass pou einai aparaitita gia na doulepsei to ansible
 sudo apt install -y ansible sshpass
 
 # Entoli pou orizei ton xristi tou directory fluentd
@@ -769,20 +805,21 @@ sudo mkdir -p /home/docker/.ansible
 sudo chown docker.docker -R /home/docker
 
 
-# Entoli pou metaferei to arxeio me to default configuration tou ansible
+# Entoli pou metaferei ena diko mas config arxeio gia to ansible
 # ston katalogo /etc/ansible, opou exei egatastathei to ansible
 sudo cp ../ansible/ansible.cfg /etc/ansible/ansible.cfg
 
 
-# Me tis parakato entoles vriskoume tin topiki IPv4 kai IPv6 dieythynsi
+# Me tis parakato entoles vriskoume tin topiki IPv4 kai IPv6 dieythynsi tou master
 ip4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
 ip6=$(/sbin/ip -o -6 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
 
 
-# Entoli pou dimiourgei kai prosthetei sto arxeio inventory.yml ta mixanakia sta opoia epithymoume na egatastahei to fluentd
+# Entoles opou i mia dimiourgei to arxeio inventory.yml kai prosthetei se ayto to string "[service]"
+# kai i alli vriskei kai prostetei sto arxeio inventory.yml 
+# ta mixanakia sta opoia epithymoume na egatastathei to fluentd
 echo "[service]" > /data_collector_service/fluentd/inventory.yml
 /project/bin/swarmlab-nmap >> /data_collector_service/fluentd/inventory.yml
-
 
 
 # Entoli pou prosthetei kai ton master sto inventory.yml,
@@ -791,10 +828,12 @@ echo $ip4 >> /data_collector_service/fluentd/inventory.yml
 
 
 # Entoli pou trexei to ansible-playbook,
-# outos oste na pragmatopoiithoun oi egatastaseis sta mixanakia pou anaferontai sto inventory.yml
-# Orizoume to ansible na anoigei 5 syndeseis taytoxrona
+# outos oste na pragmatopoiithoun oi egatastaseis pou anaferontai sto arxeio fluentd.yml 
+# sta mixanakia pou anaferontai sto arxeio inventory.yml
+# Orizoume to ansible na anoigei 5 syndeseis taytoxrona kai na egathista kai sta 5 mixanakia taytoxrona
+# Tou leme otan tha syndethei na rotisei to password mia fora 
+# kai na rotisei ean ayto to password einai idio me tou sudo
 ansible-playbook -u docker -i inventory.yml fluentd.yml  -f 5  --ask-pass --ask-become-pass
-
 
 ```
 <br/><br/>
@@ -958,25 +997,26 @@ const io = require("socket.io-client");		//Socket.IO module gia ton client
 
 
 
-//Orizoume to URL gia ti syndesi me ton master
+//Orizoume to URL gia ti syndesi tou client me ton master
 //Exoume dosei onomata ston master kai stous workers outos oste na mporoume na anaferomaste se aytous
-//xoris na xrisimopoioume tis IP dieythinseis tous
+//eukola xoris na xreiazetai na xrisimopoioume tis IP dieythinseis tous
 const URL = "http://hybrid-linux_master_1:8085";
 
 
 
 const socket = io.connect(URL, {reconnect:true});		//Anoigei mia syndesi me ton master (server), sto port 8085
+																										//me dinatotita epanasyndesis ean gia kapoio logo pesei o server kai xanaanevei
 
 
 
 socket.on('connect', (socket) => {		//Otan o client syndethei me ton server, emfanizetai katallilo minima
-	console.log("Client connected");
+	console.log("Client connected");    //pou anaferei oti o client syndethike
 });
 
 
 
-//O client akouei gia tyxon minimata apo ton server kai otan o server steilei minima 
-//ston client sxetika me kapoia alagi pou exei ginei sti vasi dedomenon, 
+//O client akouei gia tyxon minimata me anagnoristiko 'change_msg' apo ton server 
+//kai otan o server steilei minima ston client sxetika me kapoia alagi pou exei ginei sti vasi dedomenon, 
 //o client to lamvanei kai to emfanizei sto terminal
 socket.on('change_msg', (msg) => {
 	console.log(msg);
@@ -1001,7 +1041,6 @@ curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh \
 && npm install express \
 && npm install helmet \
 && npm install dotenv
-
 ```
 <br/><br/>
 Εκτελούμε το bash αρχείο για την εγκατάσταση του [node.js](https://nodejs.org/en/) και των πακέτων, μέσω της ακόλουθης εντολής:
@@ -1037,18 +1076,18 @@ sudo ./app.js.sh
     user: "docker"
   tasks:
 
-     # ----------------------------------------------------------------------
-     # task pou diagrafei to directory client_file ean yparxei idi stous workers
-     # ----------------------------------------------------------------------
+     # ----------------------------------------------------------------------------------------------
+     # task pou diagrafei to directory client_file ean yparxei idi stous workers meso tou module file
+     # ----------------------------------------------------------------------------------------------
     - name: client directory remove
       become: true
       file:
         state: absent
         path: /client_file
 
-     # ----------------------------------------------------------
-     # task pou dimiourgei to directory client_file stous workers
-     # ----------------------------------------------------------
+     # -------------------------------------------------------------------------------
+     # task pou dimiourgei to directory client_file stous workers meso tou module file
+     # -------------------------------------------------------------------------------
     - name: make /client_file
       become: true
       file:
@@ -1058,9 +1097,9 @@ sudo ./app.js.sh
         group: docker
         mode: '0777'
 
-     # ---------------------------------------------------------------------------------------------
-     # task pou antigrafei to arxeio client.js pou periexei ton kodika gia ton client, stous workers
-     # ---------------------------------------------------------------------------------------------
+     # ------------------------------------------------------------------------------------------------------------------
+     # task pou antigrafei to arxeio client.js pou periexei ton kodika gia ton client, stous workers meso tou module copy
+     # ------------------------------------------------------------------------------------------------------------------
     - name: cp client.js
       become: true
       copy:
@@ -1070,33 +1109,33 @@ sudo ./app.js.sh
         group: docker
         mode: '0755'
 
-     # --------------------------------------------------------------
-     # task pou katevazei to nodesource_setup.sh arxeio stous workers
-     # --------------------------------------------------------------
+     # --------------------------------------------------------------------------------------
+     # task pou katevazei to nodesource_setup.sh arxeio stous workers meso tou module get_url
+     # --------------------------------------------------------------------------------------
     - name: nodesource get
       get_url:
         url: https://deb.nodesource.com/setup_16.x
         dest: /client_file/nodesource_setup.sh
 
-     # ------------------------------------------------------------
-     # task pou ektelei to nodesource_setup.sh arxeio stous workers
-     # ------------------------------------------------------------
+     # ------------------------------------------------------------------------------------
+     # task pou ektelei to nodesource_setup.sh arxeio stous workers meso tou module command
+     # ------------------------------------------------------------------------------------
     - name: start nodesource run
       become: true
       command: bash /client_file/nodesource_setup.sh
 
-     # --------------------------------------------------------------------
-     # task pou diagrafei to nodesource_setup.sh arxeio meta tin egatastasi
-     # --------------------------------------------------------------------
+     # -----------------------------------------------------------------------------------------
+     # task pou diagrafei to nodesource_setup.sh arxeio meta tin egatastasi meso tou module file
+     # -----------------------------------------------------------------------------------------
     - name: start nodesource remove
       become: true
       file: 
         state: absent
         path: /client_file/nodesource_setup.sh
 
-     # ------------------------------------------------------------------
-     # task gia tin enimerosi ton idi egatestimenon paketon stous workers
-     # ------------------------------------------------------------------
+     # --------------------------------------------------------------------------------------
+     # task gia tin enimerosi ton idi egatestimenon paketon stous workers meso tou module apt
+     # --------------------------------------------------------------------------------------
     - name: apt update packages
       become: true
       apt:
@@ -1107,9 +1146,9 @@ sudo ./app.js.sh
         install_recommends: true
         autoremove: true
 
-     # ------------------------------------------------
-     # task gia tin egatastasi tou nodejs stous workers
-     # ------------------------------------------------
+     # --------------------------------------------------------------------
+     # task gia tin egatastasi tou nodejs stous workers meso tou module apt
+     # --------------------------------------------------------------------
     - name: apt install packages
       become: true
       apt:
@@ -1122,10 +1161,11 @@ sudo ./app.js.sh
         packages:
          - nodejs
 
-     # ------------------------------------------------------------------------------------------
-     # npm begin
-     # tasks gia tin egatastasi paketon pou einai anagaia gia ti leitourgia tou nodejs meso npm
-     # ------------------------------------------------------------------------------------------
+     # ---------------------------------------------------------------------
+     # gem begin
+     # task gia ti dimiourgia katalogou gia to npm mesa ston katalogo docker
+     # me sigekrimena dikaiomata
+     # ---------------------------------------------------------------------
     - name: make dir for npm
       become: true
       file:
@@ -1135,6 +1175,9 @@ sudo ./app.js.sh
         group: docker
         mode: '0755'
 
+     # --------------------------------------------------------------------
+     # task gia tin egatastasi tou socket.io-client ekdosis 4.1.2, meso npm
+     # --------------------------------------------------------------------
     - name: npm install socket.io-client
       become: true
       npm:
@@ -1147,7 +1190,6 @@ sudo ./app.js.sh
      # npm end
      # -------------------------
 
-
 ```
 <br/><br/>
 Για την εγκατάσταση και εκτέλεση του [ansible](https://www.ansible.com/), το οποίο εγκαθιστά την υπηρεσία [node.js](https://nodejs.org/en/) σε όλους τους κόμβους του σμήνους, έχουμε δημιουργήσει το ακόλουθο bash αρχείο με όνομα nodejs.yml.sh:
@@ -1158,7 +1200,7 @@ sudo ./app.js.sh
 #Entoli pou pragmatopoiei enimerosi ton idi egatestimenon paketon
 sudo apt update -y
 
-# Entoli pou pragmatopoiei egatastasi tou ansible
+# Entoli pou pragmatopoiei egatastasi ton paketon ansible kai sshpass pou einai aparaitita gia na doulepsei to ansible
 sudo apt install -y ansible sshpass
 
 # Entoli pou orizei ton xristi tou directory app
@@ -1175,17 +1217,19 @@ sudo mkdir -p /home/docker/.ansible
 sudo chown docker.docker -R /home/docker
 
 
-# Entoli pou metaferei to arxeio me to default configuration tou ansible
+# Entoli pou metaferei ena diko mas config arxeio gia to ansible
 # ston katalogo /etc/ansible, opou exei egatastathei to ansible
 sudo cp ../ansible/ansible.cfg /etc/ansible/ansible.cfg
 
 
-# Me tis parakato entoles vriskoume tin topiki IPv4 kai IPv6 dieythynsi
+# Me tis parakato entoles vriskoume tin topiki IPv4 kai IPv6 dieythynsi tou master
 ip4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
 ip6=$(/sbin/ip -o -6 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
 
 
-# Entoli pou dimiourgei kai prosthetei sto arxeio inventory.yml ta mixanakia sta opoia epithymoume na egatastahei to fluentd
+# Entoles opou i mia dimiourgei to arxeio inventory.yml kai prosthetei se ayto to string "[service]"
+# kai i alli vriskei kai prostetei sto arxeio inventory.yml 
+# ta mixanakia sta opoia epithymoume na egatastathei to fluentd
 echo "[service]" > /data_collector_service/app/inventory.yml
 /data_collector_service/bin/swarmlab-nmap >> /data_collector_service/app/inventory.yml
 
@@ -1195,8 +1239,11 @@ echo "[service]" > /data_collector_service/app/inventory.yml
 
 
 # Entoli pou trexei to ansible-playbook,
-# outos oste na pragmatopoiithoun oi egatastaseis sta mixanakia pou anaferontai sto inventory.yml
-# Orizoume to ansible na anoigei 5 syndeseis taytoxrona
+# outos oste na pragmatopoiithoun oi egatastaseis pou anaferontai sto arxeio nodejs.yml 
+# sta mixanakia pou anaferontai sto arxeio inventory.yml
+# Orizoume to ansible na anoigei 5 syndeseis taytoxrona kai na egathista kai sta 5 mixanakia taytoxrona
+# Tou leme otan tha syndethei na rotisei to password mia fora 
+# kai na rotisei ean ayto to password einai idio me tou sudo
 ansible-playbook -u docker -i /data_collector_service/app/inventory.yml nodejs.yml  -f 5  --ask-pass --ask-become-pass
 
 ```
