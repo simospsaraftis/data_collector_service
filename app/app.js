@@ -2,8 +2,8 @@ var express = require('express');		//Module gia to web application framework
 var app = express();		//Dimiourgia enos express application
 
 
-const helmet = require('helmet');		//To module helmet parexei asfaleia 
-app.use(helmet());		//sto express app thetontas HTTP headers
+const helmet = require('helmet');		//To module helmet parexei asfaleia sto express app thetontas HTTP headers
+app.use(helmet());
 
 
 app.use(express.json());		//Orizoume oti tha xeirizetai ta requests os JSON
