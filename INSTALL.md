@@ -51,7 +51,7 @@ version: "2"
 
 #Orizetai enas registry server
 #o opoios tha akouei stin porta 5000
-#kai xrisimopoieitai gia tin apothikeysi kai dianomi docker images
+#kai xrisimopoieitai gia tin apothikeysi docker images
 services:
   registry:
     image: registry
@@ -60,7 +60,7 @@ services:
 
 #Orizetai o master
 #o opoios tha xrisimopoiei to image hybrid-linux
-#To onoma tou komvou master tha einai hybrid-linux_master_1
+#Orizetai se environment variables oti to onoma tou komvou master tha einai hybrid-linux_master_1
 #kai to domain tou tha einai to hybrid-linux_hybrid-linux
 #meso tou cap_add orizetai oti o master tha mporei na pragmatopoiei leitourgies diaxeiristi diktyou
 #orizetai oti o xristis tou komvou master tha exei dikaiomata root
@@ -86,7 +86,7 @@ services:
 
 #Orizetai o worker
 #o opoios tha xrisimopoiei to image hybrid-linux
-#To domain tou komvou worker tha einai to hybrid-linux_hybrid-linux
+#Orizetai se environment variable oti to domain tou komvou worker tha einai to hybrid-linux_hybrid-linux
 #orizetai oti o worker tha mporei na pragmatopoiei leitourgies diaxeiristi diktyou
 #orizetai oti o xristis tou komvou worker tha exei dikaiomata root
 #orizetai oti to diktyo sto opoio tha anikei o worker tha einai to hybrid-linux
