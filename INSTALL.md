@@ -951,6 +951,7 @@ var watch_collection = function(client) {
 		else if (data.operationType === 'invalidate')
 		{
 			console.log("ChangeStream closed");
+			//process.exit(1);
 		}
 	})
 	//Ean yparxei kapoio error, emfanizetai sto termatiko
