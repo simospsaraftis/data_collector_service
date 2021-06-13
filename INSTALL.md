@@ -51,7 +51,7 @@ version: "2"
 
 #Orizetai enas registry server
 #o opoios tha akouei stin porta 5000
-#kai xrisimopoieitai gia tin apothikeysi docker images
+#kai xrisimopoieitai gia tin apothikeysi kai dianomi docker images
 services:
   registry:
     image: registry
