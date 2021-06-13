@@ -602,6 +602,7 @@ config
 <br/><br/>
 ```
 ---
+---
 # Sto hosts, vaftizoume tin omada ypologiston stous opoious theloume
 # na ginei i egatastasi, "service"
 # Sto remote_user, dilonoume oti o xristis tou apomakrysmenou mixanimatos 
@@ -680,8 +681,6 @@ config
 
      # ------------------------------------------------------------------------------------------
      # task gia tin egatastasi tou fluentd ekdosis 1.12.0, meso gem
-     # sto CONFIGURE_OPTS zitao na min mou valei ta doc arxeia
-     # meso tou PATH orizo mia environment variable pou einai energi mono se ayto to block kodika
      # ------------------------------------------------------------------------------------------
     - name: gem install  fluentd
       #become: true
