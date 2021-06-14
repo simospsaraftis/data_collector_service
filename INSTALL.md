@@ -964,7 +964,7 @@ function watch_collection(client) {
 	})
 };
 
-//Asynxroni synartisi meso tis opoias  pragmatopoieitai i syndesi me ti vasi kai kaleitai i synartisi
+//Asynxroni synartisi meso tis opoias  pragmatopoieitai i syndesi me ti vasi kai kaleitai i synartisi watch_collection
 //i opoia anoigei ena ChangeStream gia na akouei o server gia tyxon allages pou symvainoun sti vasi 
 // kai na tis stelnei stous ypoloipous komvous tou sminous
 //Ta stoixeia syndesis sti vasi einai apothikeymena mesa se environment variables
