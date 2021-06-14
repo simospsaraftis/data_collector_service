@@ -129,7 +129,7 @@ async function connect_with_retry() {
 	catch (err)
 	{
 		console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-		setTimeout(connect_with_retry(), 5000);
+		setTimeout(connect_with_retry, 5000);
 	}
 };
 connect_with_retry();
