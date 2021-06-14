@@ -927,7 +927,7 @@ function watch_collection(client) {
 	var changeStream = client.db(process.env.MONGO_INITDB_DATABASE).collection(process.env.MONGO_INITDB_COLLECTION).watch({resumeAfter: resume_token})
 
 	//To ChangeStream akouei gia tyxon allages pou symvainoun sti vasi
-	//Otan pragmatopoieithei kapoio insert sti syllogi "logs" tis vasis,
+	//Otan pragmatopoiithei kapoio insert sti syllogi "logs" tis vasis,
 	//tha stalei ena insert event ston server meso tou ChangeStream
 	//kai o server afou emfanisei to periexomeno tou event sto termatiko tou, tha ta steilei stous clients meso tou io.emit()
 	changeStream.on('change', data => {
@@ -955,24 +955,25 @@ function watch_collection(client) {
 		}
 	})
 	//Ean yparxei kapoio error, emfanizetai sto termatiko
-	//kai kaleitai xana i synartisi gia na dimiourgithei xana to ChangeStream
+	//kai kaleitai xana i synartisi watch_collection gia na dimiourgithei xana to ChangeStream
+	//Otan apokatastathei to provlima, meso tou resume_token to kainourio ChangeStream 
+	//tha synexisei apo ekei pou eixe meinei to proigoumeno
 	changeStream.on('error', err => {
 		console.error(err);
 		watch_collection(client);
 	})
 };
 
-//Block kodika meso tou opoiou o server pragmatopoiei syndesi me ti vasi kai anoigei ena ChangeStream gia na akouei gia 
-//tyxon allages pou symvainoun sti vasi kai na tis stelnei stous ypoloipous komvous tou sminous
+//Asynxroni synartisi meso tis opoias  pragmatopoieitai i syndesi me ti vasi kai kaleitai i synartisi
+//i opoia anoigei ena ChangeStream gia na akouei o server gia tyxon allages pou symvainoun sti vasi 
+// kai na tis stelnei stous ypoloipous komvous tou sminous
 //Ta stoixeia syndesis sti vasi einai apothikeymena mesa se environment variables
 //Se periptosi pou gia kapoio logo den einai epityxis i sndesi me ti vasi otan pragmatopoieitai syndesi gia proti fora,
-//o server epixeirei na syndethei xana me ti vasi kathe 5 deyterolepta
-//Se periptosi pou i vasi gia kapoio logo pesei, to ChangeStream meso tou resume_token tha synexisei apo ekei pou eixe meinei otan
-//apokatastathei to provlima
+//o server epixeirei na syndethei xana me ti vasi kalontas ti synartisi connect_with_retry kathe 5 deyterolepta
 
 var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
-async function connectWithRetry() {
+async function connect_with_retry() {
 
 	try
 	{
@@ -983,10 +984,10 @@ async function connectWithRetry() {
 	catch (err)
 	{
 		console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-		setTimeout(connectWithRetry, 5000);
+		setTimeout(connect_with_retry, 5000);
 	}
 };
-connectWithRetry();
+connect_with_retry();
 ```
 <br/><br/>
 Το [node.js](https://nodejs.org/en/) αρχείο που περιέχει τον κώδικα για τον client έχει όνομα client.js και είναι το ακόλουθο:
