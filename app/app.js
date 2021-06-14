@@ -102,7 +102,7 @@ function watch_collection(client) {
 	//Ean yparxei kapoio error, emfanizetai sto termatiko
 	//kai kaleitai xana i synartisi gia na dimiourgithei xana to ChangeStream
 	changeStream.on('error', err => {
-		console.log(err);
+		console.error(err);
 		watch_collection(client);
 	})
 };
@@ -117,20 +117,19 @@ function watch_collection(client) {
 
 var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
-function connectWithRetry() {
+async function connectWithRetry() {
 
-	MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
-		if(err)
-		{
-			console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-			setTimeout(connectWithRetry, 5000);
-		}
-		else
-		{
-			console.log("Connected to mongodb");
-			watch_collection(client)
-		};
-	});
+	try
+	{
+		var client = await MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true});
+		console.log("Connected to mongodb");
+		watch_collection(client);
+	}
+	catch (err)
+	{
+		console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
+		setTimeout(connectWithRetry, 5000);
+	}
 };
 connectWithRetry();
 
