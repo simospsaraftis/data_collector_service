@@ -923,7 +923,7 @@ io.on('connection', (socket) => {
 var resume_token = null		//Metavliti stin opoia apothikeyetai to simeio apo opou tha arxisei to ChangeStream otan antimetopistei to error
 
 //Synartisi i opoia otan kaleitai dimiourgei to ChangeStream
-var watch_collection = function(client) {
+function watch_collection(client) {
 	var changeStream = client.db(process.env.MONGO_INITDB_DATABASE).collection(process.env.MONGO_INITDB_COLLECTION).watch({resumeAfter: resume_token})
 
 	//To ChangeStream akouei gia tyxon allages pou symvainoun sti vasi
@@ -957,7 +957,7 @@ var watch_collection = function(client) {
 	//Ean yparxei kapoio error, emfanizetai sto termatiko
 	//kai kaleitai xana i synartisi gia na dimiourgithei xana to ChangeStream
 	changeStream.on('error', err => {
-		console.log(err);
+		console.error(err);
 		watch_collection(client);
 	})
 };
@@ -972,20 +972,19 @@ var watch_collection = function(client) {
 
 var mongourl = "mongodb://"+process.env.MONGO_INITDB_ROOT_USERNAME+":"+process.env.MONGO_INITDB_ROOT_PASSWORD+"@"+process.env.MONGO_INITDB_NAME+":"+process.env.MONGO_INITDB_PORT+"/";
 
-var connectWithRetry = function() {
+async function connectWithRetry() {
 
-	return MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true},(err, client) => {
-		if(err)
-		{
-			console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
-			setTimeout(connectWithRetry, 5000);
-		}
-		else
-		{
-			console.log("Connected to mongodb");
-			watch_collection(client)
-		};
-	});
+	try
+	{
+		var client = await MongoClient.connect(mongourl,{useNewUrlParser: true, useUnifiedTopology: true});
+		console.log("Connected to mongodb");
+		watch_collection(client);
+	}
+	catch (err)
+	{
+		console.error("\n Failed to connect to mongodb on startup - retrying in 5 seconds \n\n", err);
+		setTimeout(connectWithRetry, 5000);
+	}
 };
 connectWithRetry();
 ```
