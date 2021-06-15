@@ -549,15 +549,18 @@ config
 #        @type stdout
 #  </store>
 
-#  <store>
-#	  @type file
-#	  path /tmp/mylog
-#	  <buffer>
-#	    timekey 1d
-#	    timekey_use_utc true
-#	    timekey_wait 10s
-#	  </buffer>
-#  </store>
+#=======================================================================#
+# Block kodika gia tin onEvent topiki/prosorini apothikeysi ton dedomenon
+#=======================================================================#
+  <store>
+	  @type file
+	  path /tmp/mylog
+	  <buffer>
+	    timekey 1d
+	    timekey_use_utc true
+	    timekey_wait 10s
+	  </buffer>
+  </store>
 
 
 </match>
