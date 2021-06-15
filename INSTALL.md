@@ -454,16 +454,15 @@ config
   @type stdout
 </match>
 
-#=========================================================================#
-# block kodika pou: 
-# 1) dilonei apo pou tha diavazei to fluentd logs diaforon programaton, 
-# diladi statistika tou mixanimatos meso tou path
-# 2) meso tou module @type tail tou leei na kanei tail sto path
-# 3) meso tou tag tou leei na vaftisei tin pigi me to tag "stats.node"
+#===========================================================================#
+# block kodika pou dilonei: 
+# 1) apo pou tha diavazei to fluentd logs diaforon programaton, meso tou path
+# 2) ti tha diavazei to fluentd, meso tou @type
+# 3) pos tha onomazei to fluentd ayta pou tha diavazei, meso tou tag
 # ayta pou diavazei to fluentd metatrepontai se json
 # to pos_file einai to arxeio pou tha dimiourgithei mesa ston katalogo
-# /tmp gia na gnorizei to fluentd pou itan tin proigoumeni fora pou diavase
-#=========================================================================#
+# gia na gnorizei to fluentd pou itan tin proigoumeni fora
+#============================================================================#
 <source>
   @type tail
 
@@ -482,17 +481,15 @@ config
 #=========================================================================#
 
 #=========================================================================#
-# block kodika pou:
-# 1) diloni apo pou tha diavazei to fluentd plirofories pou o xristis 
-# apothikeyei kai oi opoies thelei na metaferthoun, meso tou path
-# Epeidi exei asteriskous to fluentd tha diavasei oti ginetai mesa ston
-# katalogo log-in
-# 2) meso tou module @type tail tou leei na kanei tail sto path
-# 3) meso tou tag tou leei na vaftisei tin pigi me to tag "log.node"
+# block kodika pou dilonei:
+# 1) apo pou tha diavazei to fluentd plirofories pou o xristis apothikeyei 
+# kai oi opoies thelei na metaferthoun, meso tou path
+# 2) ti tha diavazei to fluentd, meso tou @type
+# 3) pos tha onomazei to fluentd ayta pou tha diavazei, meso tou tag
 # den metatrepei ayta pou to fluentd diavazei se allo typo arxeiou
 # to pos_file einai to arxeio pou tha dimiourgithei mesa ston katalogo
-# /tmp gia na gnorizei to fluentd pou itan tin proigoumeni fora
-#=========================================================================#
+# gia na gnorizei to fluentd pou itan tin proigoumeni fora
+#==========================================================================#
 <source>
   @type tail
 
@@ -510,19 +507,12 @@ config
 </source>
 
 
-#=======================================================================#
-# Orizoume ti tha kanoume me ayta pou diavasame
-# Otan tha symvei kati me tag "log", to fluentd tha to kanei copy
-# kai ta to apothikeysei sti vasi
-# Xrisimopoieitai to module mongo_replset pou exei sxesi me ti MongoDB
-# Dilonoume oti theloume na syndethei sti vasi "app_swarmlab"
-# Otan tha syndethei sti vasi tha parei to collection "logs"
-# Dilonoume tous server me to nodes
-# Dilonoume to username, to password kai epeidi exoume replica_set, to
-# dilonoume kai ayto, gia na mporesoume na syndethoume sti vasi
-# Ean paei kati strava tou leme na xanaprospathisei se 60 deyterolepta
-# Kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
-#=======================================================================#
+#====================================================================================#
+# Otan tha symvei kati me tag "log", to fluentd tha to apothikeysei sti vasi dedomenon
+# Orizetai to onoma tis vasis, to onoma xristi, to password, to replica_set
+# I vasi einai mia vasi dedomenon pou exo ftiaxei eidika gia ayton ton skopo
+# Exoyme episis, oti kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
+#=====================================================================================#
 <match log.*>
   @type copy
   <store>
@@ -549,35 +539,25 @@ config
 #        @type stdout
 #  </store>
 
-#=======================================================================#
-# Block kodika gia tin onEvent topiki/prosorini apothikeysi ton dedomenon
-#=======================================================================#
-  <store>
-	  @type file
-	  path /tmp/mylog
-	  <buffer>
-	    timekey 1d
-	    timekey_use_utc true
-	    timekey_wait 10s
-	  </buffer>
-  </store>
+#  <store>
+#	  @type file
+#	  path /tmp/mylog
+#	  <buffer>
+#	    timekey 1d
+#	    timekey_use_utc true
+#	    timekey_wait 10s
+#	  </buffer>
+#  </store>
 
 
 </match>
 
-#=======================================================================#
-# Orizoume ti tha kanoume me ayta pou diavasame
-# Otan tha symvei kati me tag "stats", to fluentd tha to kanei copy
-# kai ta to apothikeysei sti vasi
-# Xrisimopoieitai to module mongo_replset pou exei sxesi me ti MongoDB
-# Dilonoume oti theloume na syndethei sti vasi "app_swarmlab"
-# Otan tha syndethei sti vasi tha parei to collection "logs"
-# Dilonoume tous server me to nodes
-# Dilonoume to username, to password kai epeidi exoume replica_set, to
-# dilonoume kai ayto, gia na mporesoume na syndethoume sti vasi
-# Ean paei kati strava tou leme na xanaprospathisei se 60 deyterolepta
-# Kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
-#=======================================================================#
+#==================================================================================================#
+# Antistoixa, otan tha symvei kati me tag "stats", to fluentd tha to apothikeysei sti vasi dedomenon
+# Orizetai to onoma tis vasis, to onoma xristi, to password, to replica_set
+# I vasi einai mia vasi dedomenon pou exo ftiaxei eidika gia ayton ton skopo
+# Exoyme episis, oti kathe 20 deyterolepta, to fluentd tha sozei ta dedomena sti vasi
+#==================================================================================================#
 <match stats.*>
   @type copy
   <store>
