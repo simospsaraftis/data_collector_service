@@ -10,7 +10,7 @@ app.use(express.json());		//Orizoume oti tha xeirizetai ta requests os JSON
 
 
 var http = require('http');		//Module pou epitrepei metafora dedomenon pano apo to HTTP protocol
-var serverPort = "8086";		//Orizoume tin porta stin opoia tha akouei o server
+var serverPort = "8085";		//Orizoume tin porta stin opoia tha akouei o server
 var server = http.createServer(app);		//Dimiourgia tou server
 
 
