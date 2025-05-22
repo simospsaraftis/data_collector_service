@@ -1,3 +1,52 @@
+# Cloud Computing and Services – Lab Exercise 2021: Data Collector Service
+[@simospsaraftis](https://github.com/simospsaraftis)
+
+## General Information About the Application
+
+### 1. Description
+
+This project titled [data_collector_service](https://github.com/simospsaraftis/data_collector_service.git), implements a service that enables the automated collection and storage of event data from nodes in a cluster, as well as the real-time distribution of these events to the rest of the nodes via messaging. 
+
+To achieve this, the application includes:
+
+A dedicated virtual network
+
+A data/event collection agent
+
+A replicated MongoDB database for persistence
+
+Event-based ("onEvent") data storage
+
+A change stream mechanism to detect and transmit changes from the database to the cluster's master node
+
+A communication mechanism from the master node to worker nodes to forward events in real time<br/><br/>
+
+
+The cluster is deployed using the [hybrid-linux](https://git.swarmlab.io:3000/swarmlab/hybrid-linux) platform, provided by the [swarmlab.io](http://docs.swarmlab.io/) environment, and is managed using [docker](https://www.docker.com/).
+
+For storage support, the system utilizes the [storage-mongo-replica](https://git.swarmlab.io:3000/swarmlab/storage-mongo-replica), also provided by the [swarmlab.io](http://docs.swarmlab.io/) environment.
+
+
+### 2. Technologies Used
+
+- [Ansible](https://www.ansible.com/)<br/>
+Used to remotely install services and execute commands on cluster nodes.
+- [Fluentd](https://www.fluentd.org/)<br/>
+Collects and pushes data/events into the database.
+- [MongoDB](https://www.mongodb.com/)<br/>
+Stores the collected data and supports replication.
+- [Node.js](https://nodejs.org/en/)<br/>
+Provides the backend environment for communication between server and clients.
+- [Socket.IO](https://socket.io/)<br/>
+Enables real-time, bidirectional communication between server and clients.<br/><br/>
+
+
+### 3. Application Architecture Diagram
+
+The architecture of the application is illustrated in the following diagram:
+
+![App Diagram](./images/app_diagram.png)<br/><br/>
+
 # Υπολογιστική Νέφους και Υπηρεσίες - Εργαστηριακή Άσκηση 2021: Υπηρεσία Συλλογής Δεδομένων (Data Collector Service)
 [@simospsaraftis](https://github.com/simospsaraftis)
 
