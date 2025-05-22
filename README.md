@@ -47,6 +47,10 @@ The architecture of the application is illustrated in the following diagram:
 
 ![App Diagram](./images/app_diagram.png)<br/><br/>
 
+Information regarding installation can be found in [INSTALL](./INSTALL.md)
+
+Information regarding usage can be found in [USAGE](./USAGE.md)
+
 # Υπολογιστική Νέφους και Υπηρεσίες - Εργαστηριακή Άσκηση 2021: Υπηρεσία Συλλογής Δεδομένων (Data Collector Service)
 [@simospsaraftis](https://github.com/simospsaraftis)
 
